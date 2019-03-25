@@ -48,6 +48,7 @@
         android:gravity="center"
         android:paddingTop="50dp"
         android:text="내 주변의 동물 병원을\n찿아 보세요!"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,7 +72,7 @@
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="15dp"
             android:layout_marginBottom="15dp"
@@ -91,7 +92,7 @@
                 android:orientation="horizontal"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <EditText
                     android:id="@+id/searchWord"
@@ -151,35 +152,39 @@
 
             </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/myLocL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/bottomLL"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="13dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/myGps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="내 위치: 경기도"
+                    android:textColor="@color/colorHptName" />
+
+                <Button
+                    android:id="@+id/getGpsBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/mainText"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="10dp"
+                    android:text="주변 동물 병원 찾기" />
+
+            </LinearLayout>
+
         </FrameLayout>
 
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/myLoc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomLL"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="13dp"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/getGpsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottomLL"
-            android:layout_below="@+id/searchLL"
-            android:layout_alignEnd="@+id/mainText"
-            android:layout_marginEnd="39dp"
-            android:text="내 위치" />
-
-        <TextView
-            android:id="@+id/myGps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
     </LinearLayout>
 
     <LinearLayout

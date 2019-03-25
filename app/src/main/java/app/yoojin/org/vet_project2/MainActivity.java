@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner;
     String selectItem, nowAddress, nowProvince, nowCity;
     FrameLayout locationL, frame;
-    LinearLayout nameL;
+    LinearLayout nameL, myLocL;
     Button searchIcon, searchIcon2, getGpsBtn;
     TextView myGps;
     EditText searchWord;
     int index = 0;
+    double latitude, longtitude;
 
     public static Context mContext;
 
@@ -85,31 +86,64 @@ public class MainActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         nameL = findViewById(R.id.nameL);
         locationL = findViewById(R.id.locationL);
+        myLocL = findViewById(R.id.myLocL);
         frame = findViewById(R.id.frame);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectItem = parent.getItemAtPosition(position).toString(); //상호명 or 지역
-                if (selectItem.equals("상호명")) {
+                if (selectItem.equals("내 위치로 검색")) {
                     index=0;
                     // 수정 필요
                     if(index==0){
-                        nameL.setVisibility(View.VISIBLE);
+                        myLocL.setVisibility(View.VISIBLE);
+                        nameL.setVisibility(View.INVISIBLE);
                         locationL.setVisibility(View.INVISIBLE);
                     } else if(index==1){
+                        myLocL.setVisibility(View.INVISIBLE);
+                        nameL.setVisibility(View.VISIBLE);
+                        locationL.setVisibility(View.INVISIBLE);
+                    } else if (index==2) {
+                        myLocL.setVisibility(View.INVISIBLE);
                         nameL.setVisibility(View.INVISIBLE);
                         locationL.setVisibility(View.VISIBLE);
                     } else{
                         index=0;
                     }
-                }else if(selectItem.equals("지역")){
-                    index+=1;
+                }else if(selectItem.equals("상호명으로 검색")){
+                    index=1;
 
                     if(index==0){
+                        myLocL.setVisibility(View.VISIBLE);
+                        nameL.setVisibility(View.INVISIBLE);
+                        locationL.setVisibility(View.INVISIBLE);
+
+
+                    } else if(index==1){
+                        myLocL.setVisibility(View.INVISIBLE);
                         nameL.setVisibility(View.VISIBLE);
                         locationL.setVisibility(View.INVISIBLE);
+                    } else if (index==2) {
+                        myLocL.setVisibility(View.INVISIBLE);
+                        nameL.setVisibility(View.INVISIBLE);
+                        locationL.setVisibility(View.VISIBLE);
+                    } else{
+                        index=0;
+                    }
+                }else if(selectItem.equals("지역으로 검색")){
+                    index=2;
+
+                    if(index==0){
+                        myLocL.setVisibility(View.VISIBLE);
+                        nameL.setVisibility(View.INVISIBLE);
+                        locationL.setVisibility(View.INVISIBLE);
                     } else if(index==1){
+                        myLocL.setVisibility(View.INVISIBLE);
+                        nameL.setVisibility(View.VISIBLE);
+                        locationL.setVisibility(View.INVISIBLE);
+                    } else if (index==2) {
+                        myLocL.setVisibility(View.INVISIBLE);
                         nameL.setVisibility(View.INVISIBLE);
                         locationL.setVisibility(View.VISIBLE);
                     } else{
@@ -117,10 +151,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -234,15 +266,12 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
-
                     }
                 });
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -258,8 +287,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         // 상호명으로 검색
         searchIcon = findViewById(R.id.searchIcon);
         searchWord = findViewById(R.id.searchWord);
@@ -274,60 +301,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // GPS 정보 보여주기 위한 이벤트 클래스 등록
+        // GPS 정보 보여주기 위함
         getGpsBtn = findViewById(R.id.getGpsBtn);
         myGps = findViewById(R.id.myGps);
+
+        gps = new GPSInfo(MainActivity.this);
+
         getGpsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 권한 요청
-                if(!isPermission){
-                    callPermission();
-                    return;
-                }
+                Intent listIntent = new Intent(v.getContext(), VetListActivity.class);
+                if(gps.isGetLocation()) {
+                    listIntent.putExtra("lat",gps.getLatitude());
+                    listIntent.putExtra("lng",gps.getLongtitude());
+                    nowProvince = getCurrentLocation()[1];
+                    nowCity = getCurrentLocation()[2];
+                    // 현재 시도, 시군구로 검색
+                    Log.v("인텐트도",nowProvince);
+                    Log.v("인텐트시",nowCity);
+                    listIntent.putExtra("nowP",nowProvince);
+                    listIntent.putExtra("nowC",nowCity);
 
-                gps = new GPSInfo(MainActivity.this);
-                // GPS 사용 유무 가져오기
-                if(gps.isGetLocation()){
-                    double latitude = gps.getLatitude();
-                    double longtitude = gps.getLongtitude();
-
-                    //Geocoder (위도경도 -> 주소)
-                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                    List<Address> addresses = null;
-                    try{
-                        addresses = geocoder.getFromLocation(latitude, longtitude, 1);
-                        Address address = addresses.get(0);
-                        for(int i=0;i<=address.getMaxAddressLineIndex();i++){
-                            // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
-                            Log.v("주소: ",address.getAddressLine(i));
-                            String[] adrs = address.getAddressLine(i).split(" ");
-                            nowAddress = address.getAddressLine(i).substring(4);
-                            nowProvince = adrs[1];
-                            nowCity = adrs[2];
-                            Log.v("시도",nowProvince);
-                            Log.v("시군구",nowCity);
-
-                            myGps.setText(nowAddress);
-                        }
-                    } catch (IOException e){
-                        e.printStackTrace();
-                    }
-                    if(addresses != null){
-                        if(addresses.size() == 0){
-                            Toast.makeText(getApplicationContext(), "주소정보 없음", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    //Toast.makeText(getApplicationContext(), "당신의 위치\n위도: "+latitude+"\n경도: "+longtitude, Toast.LENGTH_LONG).show();
+                    startActivity(listIntent);
                 } else{
-                    // GPS 사용할 수 없을 시의 alert
-                    gps.showSettingsAlert();
+                    Toast.makeText(MainActivity.this, "위치 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         callPermission(); // 권한 요청
+        getCurrentLocation();
+        // GPS 끝
 
     }
     //onCreate 끝
@@ -385,5 +389,52 @@ public class MainActivity extends AppCompatActivity {
         } else{
             isPermission = true;
         }
+    }
+
+    // 주소 가져오기
+    private String[] getCurrentLocation(){
+        // 권한 요청
+        String[] result = {};
+        if(!isPermission){
+            callPermission();
+            return result;
+        }
+
+        gps = new GPSInfo(MainActivity.this);
+        // GPS 사용 유무 가져오기
+        if(gps.isGetLocation()){
+            double latitude = gps.getLatitude();
+            double longtitude = gps.getLongtitude();
+
+            //Geocoder (위도경도 -> 주소)
+            Geocoder geocoder = new Geocoder(this);
+            List<Address> addressList = null;
+
+            try{
+                addressList = geocoder.getFromLocation(latitude, longtitude, 1);
+            } catch (IOException e){
+                e.printStackTrace();
+                Log.e("test","입출력 오류");
+            }
+
+            if(addressList!=null){
+                Log.d("구글결과",addressList.get(0).getAddressLine(0));
+                // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
+                String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
+                nowAddress = addressList.get(0).getAddressLine(0).substring(4);
+                nowProvince = adrs[1];
+                nowCity = adrs[2];
+                Log.v("시도",nowProvince);
+                Log.v("시군구",nowCity);
+
+                myGps.setText("내 위치: "+nowAddress);
+                result = new String[]{nowAddress, nowProvince, nowCity};
+            }
+
+        } else{
+            // GPS 사용할 수 없을 시의 alert
+            gps.showSettingsAlert();
+        }
+        return result;
     }
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="searchSpinner">
-        <item>상호명</item>
-        <item>지역</item>
+        <item>내 위치로 검색</item>
+        <item>상호명으로 검색</item>
+        <item>지역으로 검색</item>
     </string-array>
 
     <string-array name="sortSpinner">

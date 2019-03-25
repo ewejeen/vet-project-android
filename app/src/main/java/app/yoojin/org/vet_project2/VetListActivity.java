@@ -66,11 +66,18 @@ public class VetListActivity extends AppCompatActivity{
 
         initViews();
 
+
         textView = findViewById(R.id.textView);
         Bundle intent = getIntent().getExtras();
+        Log.v("위도", ""+intent.getDouble("lat"));
+        Log.v("경도", ""+intent.getDouble("lng"));
         if(intent.getString("searchKeyword")!=null){
             textView.setText("'"+intent.getString("searchKeyword")+"'");
-        } else{
+        } else if(intent.getDouble("lat") != 0 && intent.getDouble("lng") != 0){
+            //textView.setText("가까운 동물 병원");
+            textView.setText("'"+intent.getString("nowP") +" "+ intent.getString("nowC")+"'");
+        }
+        else{
             textView.setText("'"+intent.getString("province") +" "+ intent.getString("city")+"'");
         }
 
@@ -109,8 +116,10 @@ public class VetListActivity extends AppCompatActivity{
         Bundle intent = getIntent().getExtras();
         if(intent.getString("searchKeyword")!=null) {
             searchByName();
+        }  else if(intent.getDouble("lat") != 0 && intent.getDouble("lng") != 0){
+            searchNearest();
         }
-        else {
+        else{
             searchByRegion();
         }
     }
@@ -180,6 +189,38 @@ public class VetListActivity extends AppCompatActivity{
 
         String province = intent.getString("province");
         String city = intent.getString("city");
+        HashMap<String, String> region = new HashMap<>();
+        region.put("province", province);
+        region.put("city", city);
+
+        Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByRegion(region);
+        call.enqueue(new Callback<List<VetVO>>() {
+            @Override
+            public void onResponse(Call<List<VetVO>> call, Response<List<VetVO>> response) {
+                data = response.body();
+                adapter = new VetDataAdapter(data);
+                recyclerView.setAdapter(adapter);
+
+                total = findViewById(R.id.total);
+                String totalRes = String.format("%d", adapter.getItemCount()-1);
+                total.setText(totalRes+"건");
+            }
+
+            @Override
+            public void onFailure(Call<List<VetVO>> call, Throwable t) {
+                Log.d("Error: ",t.getMessage());
+            }
+        });
+    }
+
+    // 가까운 병원 검색 - 현재 시도, 시군구로 검색하는 걸로 임시
+    private void searchNearest(){
+        Bundle intent = getIntent().getExtras();
+
+        String province = intent.getString("nowP");
+        String city = intent.getString("nowC");
+        Log.v("도",province);
+        Log.v("시",city);
         HashMap<String, String> region = new HashMap<>();
         region.put("province", province);
         region.put("city", city);
