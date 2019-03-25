@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 public class GPSInfo extends Service implements LocationListener {
     private final Context mContext;
@@ -78,6 +79,7 @@ public class GPSInfo extends Service implements LocationListener {
                             // 위도 경도 저장
                             lat = location.getLatitude();
                             lng = location.getLongitude();
+                            Log.v("주소","위도: "+lat+", 경도: "+lng);
                         }
                     }
                 }
@@ -126,7 +128,7 @@ public class GPSInfo extends Service implements LocationListener {
         return lng;
     }
 
-    // GPS나 wifi 정보가 켜져 있는지 확인
+    // GPS가 켜져 있는지 확인
     public boolean isGetLocation(){
         return this.isGetLocation;
     }
@@ -153,7 +155,8 @@ public class GPSInfo extends Service implements LocationListener {
                         dialog.cancel();;
                     }
                 });
-        alertDialog.show();
+        AlertDialog alert = alertDialog.create();
+        alert.show();
     }
 
 

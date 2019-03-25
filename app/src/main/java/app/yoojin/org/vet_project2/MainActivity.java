@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,8 +29,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Retrofit;
 
@@ -36,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     android.support.v7.widget.Toolbar topToolbar;
     Spinner spinner;
-    String selectItem;
+    String selectItem, nowAddress, nowProvince, nowCity;
     FrameLayout locationL, frame;
     LinearLayout nameL;
     Button searchIcon, searchIcon2, getGpsBtn;
@@ -63,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //getHashKey();
 
         mContext = this;
 
@@ -289,7 +292,34 @@ public class MainActivity extends AppCompatActivity {
                     double latitude = gps.getLatitude();
                     double longtitude = gps.getLongtitude();
 
-                    Toast.makeText(getApplicationContext(), "당신의 위치\n위도: "+latitude+"\n경도: "+longtitude, Toast.LENGTH_LONG).show();
+                    //Geocoder (위도경도 -> 주소)
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    List<Address> addresses = null;
+                    try{
+                        addresses = geocoder.getFromLocation(latitude, longtitude, 1);
+                        Address address = addresses.get(0);
+                        for(int i=0;i<=address.getMaxAddressLineIndex();i++){
+                            // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
+                            Log.v("주소: ",address.getAddressLine(i));
+                            String[] adrs = address.getAddressLine(i).split(" ");
+                            nowAddress = address.getAddressLine(i).substring(4);
+                            nowProvince = adrs[1];
+                            nowCity = adrs[2];
+                            Log.v("시도",nowProvince);
+                            Log.v("시군구",nowCity);
+
+                            myGps.setText(nowAddress);
+                        }
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    if(addresses != null){
+                        if(addresses.size() == 0){
+                            Toast.makeText(getApplicationContext(), "주소정보 없음", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    //Toast.makeText(getApplicationContext(), "당신의 위치\n위도: "+latitude+"\n경도: "+longtitude, Toast.LENGTH_LONG).show();
                 } else{
                     // GPS 사용할 수 없을 시의 alert
                     gps.showSettingsAlert();
@@ -298,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         callPermission(); // 권한 요청
+
     }
     //onCreate 끝
 
