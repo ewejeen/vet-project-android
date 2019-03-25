@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_rvdetail"
+        android:icon="@drawable/ic_chrome_reader_mode_black_24dp"
+        android:title="목록 보기" />
+
+</menu>
