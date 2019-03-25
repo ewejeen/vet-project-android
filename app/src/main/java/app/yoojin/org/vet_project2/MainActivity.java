@@ -1,10 +1,12 @@
 package app.yoojin.org.vet_project2;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,6 +24,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.MessageDigest;
@@ -36,12 +39,20 @@ public class MainActivity extends AppCompatActivity {
     String selectItem;
     FrameLayout locationL, frame;
     LinearLayout nameL;
-    Button searchIcon, searchIcon2;
+    Button searchIcon, searchIcon2, getGpsBtn;
+    TextView myGps;
     EditText searchWord;
     int index = 0;
-    Retrofit retrofit;
 
     public static Context mContext;
+
+    /* GPS 관련 */
+    private final int PERMISSIONS_ACCESS_FINE_LOCATION = 1000;
+    private final int PERMISSIONS_ACCESS_COARSE_LOCATION = 1001;
+    private boolean isAccessFineLocation = false;
+    private boolean isAccessCoarseLocation = false;
+    private boolean isPermission = false;
+    private GPSInfo gps;
 
     // 스피너 어댑터 설정(시도/시군구)
     ArrayAdapter<CharSequence> ad_province, ad_city;
@@ -259,6 +270,34 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // GPS 정보 보여주기 위한 이벤트 클래스 등록
+        getGpsBtn = findViewById(R.id.getGpsBtn);
+        myGps = findViewById(R.id.myGps);
+        getGpsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 권한 요청
+                if(!isPermission){
+                    callPermission();
+                    return;
+                }
+
+                gps = new GPSInfo(MainActivity.this);
+                // GPS 사용 유무 가져오기
+                if(gps.isGetLocation()){
+                    double latitude = gps.getLatitude();
+                    double longtitude = gps.getLongtitude();
+
+                    Toast.makeText(getApplicationContext(), "당신의 위치\n위도: "+latitude+"\n경도: "+longtitude, Toast.LENGTH_LONG).show();
+                } else{
+                    // GPS 사용할 수 없을 시의 alert
+                    gps.showSettingsAlert();
+                }
+            }
+        });
+
+        callPermission(); // 권한 요청
     }
     //onCreate 끝
 
@@ -286,28 +325,34 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-/*
-    private void getHashKey(){
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == PERMISSIONS_ACCESS_FINE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            isAccessFineLocation = true;
+        } else if(requestCode == PERMISSIONS_ACCESS_COARSE_LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            isAccessCoarseLocation = true;
         }
-        if (packageInfo == null)
-            Log.e("KeyHash", "KeyHash:null");
 
-        for (Signature signature : packageInfo.signatures) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            } catch (NoSuchAlgorithmException e) {
-                Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
-            }
+        if(isAccessFineLocation && isAccessCoarseLocation){
+            isPermission = true;
         }
     }
-*/
 
-
+    // 권한 요청 메소드
+    private void callPermission(){
+        // SDK 버전과 권한이 주어졌는지 여부를 확인
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_ACCESS_FINE_LOCATION);
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    PERMISSIONS_ACCESS_COARSE_LOCATION);
+        } else{
+            isPermission = true;
+        }
+    }
 }
