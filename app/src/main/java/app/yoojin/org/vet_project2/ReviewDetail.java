@@ -8,6 +8,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -34,8 +37,12 @@ public class ReviewDetail extends AppCompatActivity {
     private int rv_id, hpt_id;
     private ImageView rv_image;
     private RatingBar ratingBar;
-    private Button deleteBtn, updateBtn;
+    private Button deleteBtn, updateBtn, cmtReg;
     private String hpt_nameT;
+    private EditText cmtCon;
+    private RecyclerView cmt_recycler;
+    private List<ReviewVO> data;
+    private ReviewCommentAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,14 @@ public class ReviewDetail extends AppCompatActivity {
         deleteBtn.setOnClickListener(deleteFn);
         // 수정 기능
         updateBtn.setOnClickListener(updateFn);
+
+        cmtCon = findViewById(R.id.cmtCon);
+        cmtReg = findViewById(R.id.cmtReg);
+        // 댓글 등록 기능
+        cmtReg.setOnClickListener(cmtRegFn);
+
+        // 댓글 목록 불러오기
+        initRecycler();
 
         // Top Navigation
         topToolbar = findViewById(R.id.topToolbarSub);
@@ -221,5 +236,66 @@ public class ReviewDetail extends AppCompatActivity {
             startActivity(updateIntent);
         }
     };
+
+    // 댓글 등록
+    Button.OnClickListener cmtRegFn = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            String cmt_content = cmtCon.getText().toString();
+            if(cmt_content != null && cmt_content != ""){
+                Call<String> call = RetrofitInit.getInstance().getService().insertComment(cmtCon.getText().toString(), rv_id);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        String data = response.body();
+                        Log.d("쓰고 받은 데이터",data);
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("댓글 등록 레트로핏 에러", t.getMessage());
+                    }
+                });
+            } else{
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReviewDetail.this);
+                alertDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                    }
+                });
+                alertDialog.setMessage("내용을 입력해 주세요.");
+                alertDialog.show();
+            }
+        }
+    };
+
+    // 댓글 목록 리사이클러
+    private void initRecycler(){
+        cmt_recycler = (RecyclerView) findViewById(R.id.cmt_recycler);
+        cmt_recycler.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        cmt_recycler.setLayoutManager(layoutManager);
+        loadComment();
+    }
+
+    // 댓글 리스트 로드
+    private void loadComment(){
+        Call<List<ReviewVO>> call = RetrofitInit.getInstance().getService().commentList(rv_id);
+
+        call.enqueue(new Callback<List<ReviewVO>>() {
+            @Override
+            public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
+                data = response.body();
+                adapter = new ReviewCommentAdapter(data);
+                cmt_recycler.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<ReviewVO>> call, Throwable t) {
+                Log.d("Error: ",t.getMessage());
+            }
+        });
+    }
 
 }

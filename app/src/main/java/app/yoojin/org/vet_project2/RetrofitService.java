@@ -84,6 +84,24 @@ public interface RetrofitService {
             @Field("rv_id") int rv_id
     );
 
+    @GET("/vetproject_v2/review/commentList.do")
+    Call<List<ReviewVO>> commentList(
+            @Query("rv_id") int rv_id
+    );
+
+    @POST("/vetproject_v2/review/insertComment.do")
+    @FormUrlEncoded
+    Call<String> insertComment(
+            @Field("cmt_content") String cmt_content,
+            @Field("rv_id") int rv_id
+    );
+
+    @POST("/vetproject_v2/review/deleteComment.do")
+    @FormUrlEncoded
+    Call<String> deleteComment(
+            @Field("cmt_id") int cmt_id
+    );
+
 //////////////////////////////////////////////////////////////
 
     @GET("/vetproject_v2/noticeListApp.do")

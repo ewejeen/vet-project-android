@@ -35,7 +35,7 @@ public class ReviewVO {
     @SerializedName("cmtContent")
     private String cmt_content;
     @SerializedName("cmtRegDate")
-    private Timestamp cmt_reg_date;
+    private String cmt_reg_date;
 
     // 관리자가 조회하기 위함
     @SerializedName("hptName")
@@ -155,11 +155,11 @@ public class ReviewVO {
         this.cmt_content = cmt_content;
     }
 
-    public Timestamp getCmt_reg_date() {
+    public String getCmt_reg_date() {
         return cmt_reg_date;
     }
 
-    public void setCmt_reg_date(Timestamp cmt_reg_date) {
+    public void setCmt_reg_date(String cmt_reg_date) {
         this.cmt_reg_date = cmt_reg_date;
     }
 
