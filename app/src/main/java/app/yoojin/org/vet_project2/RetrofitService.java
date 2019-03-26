@@ -29,9 +29,9 @@ public interface RetrofitService {
             @QueryMap HashMap<String, String> region
     );
 
-    @POST("/verproject_v2/vetHitUp.do")
+    @POST("/vetproject_v2/vetHitUp.do")
     @FormUrlEncoded
-    Call<VetVO> vetHitUp(
+    Call<String> vetHitUp(
             @Field("hpt_id") int hpt_id
     );
 

@@ -48,7 +48,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
     private Retrofit retrofit;
     private List<ReviewVO> data;
-    private VetVO hitData;
+    private String hitData;
     private ReviewDataAdapterThree adapter;
     private Toolbar topToolbar;
     private TextView name, newAdd, oldAdd, phone, hit, rvcnt, rateavg;
@@ -84,11 +84,16 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         hit = findViewById(R.id.hit);
 
         Bundle intent = getIntent().getExtras();
+        int hpt_id = intent.getInt("hpt_id");
+        int hpt_hit = intent.getInt("hpt_hit");
+        hitUp(hpt_id);
+        hpt_hit++; // 조회수+1
+
         float rating = Float.valueOf(intent.getString("ratingAvg"));
         String ratingRound = String.format("%.2f", rating);
 
         name.setText(intent.getString("hpt_name"));
-        hit.setText(""+intent.getInt("hpt_hit"));
+        hit.setText(""+hpt_hit);
         rvcnt.setText("("+intent.getString("review_cnt")+")");
         ratingBar2.setRating(rating);
         rateavg.setText(ratingRound);
@@ -134,7 +139,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         initViews();
-        //hitUp(intent.getInt("hpt_id")); // 조회수+1
+
     }
 
     // 구글 지도 API
@@ -204,27 +209,26 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         });
 
     }
-/*
+
 
     // 병원 조회수 +1
     private void hitUp(int hpt_id){
-        VetListSearch request = retrofit.create(VetListSearch.class);
-        Call<VetVO> call = request.vetHitUp(hpt_id);
-        call.enqueue(new Callback<VetVO>() {
+        Call<String> call = RetrofitInit.getInstance().getService().vetHitUp(hpt_id);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<VetVO> call, Response<VetVO> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 Log.d("리스폰스","성공이당");
                 hitData = response.body();
                 Log.d("는",hitData.toString());
             }
 
             @Override
-            public void onFailure(Call<VetVO> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
 
             }
         });
     }
-*/
+
 
 
 
