@@ -47,7 +47,7 @@
         android:layout_marginEnd="8dp"
         android:gravity="center"
         android:paddingTop="50dp"
-        android:text="내 주변의 동물 병원을\n찿아 보세요!"
+        android:text="내 주변의 동물 병원을\n찾아 보세요!"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -165,9 +165,9 @@
                     android:id="@+id/myGps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="내 위치: 경기도"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="내 위치를 불러오지 못했습니다."
                     android:textColor="@color/colorHptName" />
 
                 <Button

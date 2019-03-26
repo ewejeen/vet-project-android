@@ -237,15 +237,19 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
                 // 전화 걸기
                 case R.id.navigation_call:
                     Bundle intent = getIntent().getExtras(); // 전화번호 받아올 인텐트
-                    Intent callIntent = new Intent(Intent.ACTION_DIAL); // 전화 다이얼 화면 가는 인텐트
                     String phoneData = intent.getString("hpt_phone"); // 받아온 전화번호 000-0000-0000
-
-                    String tel = "tel:" + phoneData.replaceAll("[^0-9]",""); // 정규식으로 하이픈 제거
-                    callIntent.setData(Uri.parse(tel));
-                    try{
-                        startActivity(callIntent);
-                    } catch(Exception e){
-                        e.printStackTrace();
+                    if(!phoneData.equals(null) && !phoneData.equals("")){
+                        Intent callIntent = new Intent(Intent.ACTION_DIAL); // 전화 다이얼 화면 가는 인텐트
+    
+                        String tel = "tel:" + phoneData.replaceAll("[^0-9]",""); // 정규식으로 하이픈 제거
+                        callIntent.setData(Uri.parse(tel));
+                        try{
+                            startActivity(callIntent);
+                        } catch(Exception e){
+                            e.printStackTrace();
+                        }
+                    } else{
+                        Toast.makeText(VetDetail.this, "전화번호 정보가 없습니다.", Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 // 후기 작성 페이지로 이동

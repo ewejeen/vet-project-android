@@ -91,7 +91,7 @@ public interface RetrofitService {
 
     @POST("/vetproject_v2/review/insertComment.do")
     @FormUrlEncoded
-    Call<String> insertComment(
+    Call<List<ReviewVO>> insertComment(
             @Field("cmt_content") String cmt_content,
             @Field("rv_id") int rv_id
     );

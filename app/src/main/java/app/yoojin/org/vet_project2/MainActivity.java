@@ -346,10 +346,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     return true;
                 case R.id.navigation_findvet:
-                    Intent intent = new Intent(MainActivity.this, VetListActivity.class);
-                    searchWord = findViewById(R.id.searchWord);
-                    intent.putExtra("searchKeyword", searchWord.getText().toString());
-                    startActivity(intent);
+                    Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_notice:
                     Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);

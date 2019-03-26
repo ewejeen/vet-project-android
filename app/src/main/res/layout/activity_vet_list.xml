@@ -83,7 +83,7 @@
         android:layout_alignTop="@+id/textView"
         android:layout_marginStart="5dp"
         android:layout_toEndOf="@+id/textView2"
-        android:text="N건"
+        android:text="0건"
         android:textColor="@android:color/holo_blue_dark" />
 
     <Spinner

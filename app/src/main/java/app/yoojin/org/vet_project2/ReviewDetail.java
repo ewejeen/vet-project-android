@@ -79,13 +79,14 @@ public class ReviewDetail extends AppCompatActivity {
         // 수정 기능
         updateBtn.setOnClickListener(updateFn);
 
+        // 댓글 목록 불러오기
+        initRecycler();
+
         cmtCon = findViewById(R.id.cmtCon);
         cmtReg = findViewById(R.id.cmtReg);
         // 댓글 등록 기능
         cmtReg.setOnClickListener(cmtRegFn);
 
-        // 댓글 목록 불러오기
-        initRecycler();
 
         // Top Navigation
         topToolbar = findViewById(R.id.topToolbarSub);
@@ -242,20 +243,21 @@ public class ReviewDetail extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             String cmt_content = cmtCon.getText().toString();
-            if(cmt_content != null && cmt_content != ""){
-                Call<String> call = RetrofitInit.getInstance().getService().insertComment(cmtCon.getText().toString(), rv_id);
-                call.enqueue(new Callback<String>() {
+            if(!cmt_content.equals(null) && !cmt_content.equals("")){
+                Call<List<ReviewVO>> call = RetrofitInit.getInstance().getService().insertComment(cmtCon.getText().toString(), rv_id);
+                call.enqueue(new Callback<List<ReviewVO>>() {
                     @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        String data = response.body();
-                        Log.d("쓰고 받은 데이터",data);
+                    public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
+                        List<ReviewVO> list = response.body();
+                        data.add(list.get(0));
                     }
 
                     @Override
-                    public void onFailure(Call<String> call, Throwable t) {
+                    public void onFailure(Call<List<ReviewVO>> call, Throwable t) {
                         Log.d("댓글 등록 레트로핏 에러", t.getMessage());
                     }
                 });
+
             } else{
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReviewDetail.this);
                 alertDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -268,6 +270,7 @@ public class ReviewDetail extends AppCompatActivity {
                 alertDialog.show();
             }
         }
+
     };
 
     // 댓글 목록 리사이클러
@@ -288,7 +291,12 @@ public class ReviewDetail extends AppCompatActivity {
             public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
                 data = response.body();
                 adapter = new ReviewCommentAdapter(data);
+                if (data.size() > 0) {    //데이타가 추가, 수정되었을때
+                    adapter.notifyDataSetChanged();
+                    Log.d("데이터셋체인지", "notify");
+                }
                 cmt_recycler.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

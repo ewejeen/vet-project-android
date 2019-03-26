@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="전화 번호 정보가 없습니다." />
+                    android:text="전화번호 정보가 없습니다." />
             </LinearLayout>
 
             <fragment
