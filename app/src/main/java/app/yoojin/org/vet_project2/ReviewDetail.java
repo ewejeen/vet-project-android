@@ -249,7 +249,9 @@ public class ReviewDetail extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
                         List<ReviewVO> list = response.body();
-                        data.add(list.get(0));
+                        adapter.notifyDataSetChanged();
+                        //data.add(list.get(0));
+                        data.add(0,list.get(0));
                     }
 
                     @Override

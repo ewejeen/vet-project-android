@@ -187,7 +187,7 @@ public class VetListActivity extends AppCompatActivity{
     private void searchByRegion(){
         Bundle intent = getIntent().getExtras();
 
-        String province = intent.getString("province");
+        final String province = intent.getString("province");
         String city = intent.getString("city");
         HashMap<String, String> region = new HashMap<>();
         region.put("province", province);
@@ -198,6 +198,33 @@ public class VetListActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<List<VetVO>> call, Response<List<VetVO>> response) {
                 data = response.body();
+
+                // 평점 높은 순 정렬
+                /*Collections.sort(data, new Comparator<VetVO>() {
+                    @Override
+                    public int compare(VetVO o1, VetVO o2) {
+                        if(Float.parseFloat(o1.getRateAvg()) < Float.parseFloat(o2.getRateAvg())){
+                            return 1;
+                        } else if(Float.parseFloat(o1.getRateAvg()) > Float.parseFloat(o2.getRateAvg())){
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });*/
+
+                // 후기 많은 순 정렬
+                /*Collections.sort(data, new Comparator<VetVO>() {
+                    @Override
+                    public int compare(VetVO o1, VetVO o2) {
+                        if(Float.parseFloat(o1.getReviewCnt()) < Float.parseFloat(o2.getReviewCnt())){
+                            return 1;
+                        } else if(Float.parseFloat(o1.getReviewCnt()) > Float.parseFloat(o2.getReviewCnt())){
+                            return -1;
+                        }
+                        return 0;
+                    }
+                });*/
+
                 adapter = new VetDataAdapter(data);
                 recyclerView.setAdapter(adapter);
 
