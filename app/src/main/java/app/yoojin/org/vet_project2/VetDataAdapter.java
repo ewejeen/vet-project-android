@@ -63,10 +63,6 @@ public class VetDataAdapter extends RecyclerView.Adapter {
         return null;
     }
 
-    private void hitUp(int hpt_id){
-
-    }
-
     // 뷰를 세팅한다
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
@@ -91,16 +87,8 @@ public class VetDataAdapter extends RecyclerView.Adapter {
                     Intent intent = new Intent(v.getContext(),VetDetail.class);
                     intent.putExtra("hpt_id",list.get(position).getHpt_id());
                     intent.putExtra("hpt_name",list.get(position).getHpt_name());
-                    intent.putExtra("review_cnt",list.get(position).getReviewCnt());
-                    intent.putExtra("ratingAvg",list.get(position).getRateAvg());
-
-                    // 상세페이지에만 들어가는 정보들
-                    intent.putExtra("adrs_new", list.get(position).getAdrs_new());
-                    intent.putExtra("adrs_old", list.get(position).getAdrs_old());
                     intent.putExtra("address", list.get(position).getAddress());
                     intent.putExtra("hpt_phone", list.get(position).getHpt_phone());
-                    intent.putExtra("hpt_hit",list.get(position).getHpt_hit());
-                    hitUp(list.get(position).getHpt_id());  // 조회수 올림
                     v.getContext().startActivity(intent);
                 }
             });

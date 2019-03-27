@@ -89,7 +89,7 @@
         android:layout_marginLeft="7dp"
         android:layout_toEndOf="@+id/textView27"
         android:layout_toRightOf="@+id/textView27"
-        android:text="N건"
+        android:text="0건"
         android:textColor="@android:color/holo_blue_dark" />
 
     <Button

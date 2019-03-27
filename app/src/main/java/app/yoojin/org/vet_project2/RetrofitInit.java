@@ -20,11 +20,16 @@ public class RetrofitInit {
     //private static final String BASE_URL = "http://172.30.120.188:8080";
     //private static final String BASE_URL = "http://172.30.121.45:8080";
 
+    private static final String IMAGE_URL = "/vetproject_v2/images/upload/";
+
     private static RetrofitInit ourInstance = new RetrofitInit();
     public static RetrofitInit getInstance() {
         return ourInstance;
     }
     private RetrofitInit() {
+    }
+    public static String getImageURL(){
+        return BASE_URL+IMAGE_URL;
     }
 
 
@@ -45,4 +50,5 @@ public class RetrofitInit {
 
         return retrofit.create(RetrofitService.class);
     }
+
 }

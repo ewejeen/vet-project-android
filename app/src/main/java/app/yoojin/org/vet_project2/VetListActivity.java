@@ -135,17 +135,14 @@ public class VetListActivity extends AppCompatActivity{
     private void searchByName(){
         Bundle intent = getIntent().getExtras();
         String searchKeyword = intent.getString("searchKeyword");
-        //Call<List<VetVO>> call = request.vetGetByName(searchKeyword);
         Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByName(searchKeyword);
-
-
         call.enqueue(new Callback<List<VetVO>>() {
             @Override
             public void onResponse(Call<List<VetVO>> call, final Response<List<VetVO>> response) {
 
                 data = response.body();
 
-                sortSpinner.setOnItemSelectedListener(spinnerListener);
+                sortSpinner.setOnItemSelectedListener(spinnerListener); // 정렬 스피너
 
                 adapter = new VetDataAdapter(data);
                 recyclerView.setAdapter(adapter);

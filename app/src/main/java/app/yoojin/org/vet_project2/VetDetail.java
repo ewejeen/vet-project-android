@@ -52,7 +52,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     private RecyclerView recyclerView;
     private Button moreBtn;
 
-    private String hpt_name;
+    private String hpt_name, hpt_phone, address;
     private int hpt_id, hpt_hit;
     private float rating;
 
@@ -85,6 +85,8 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         Bundle intent = getIntent().getExtras();
         hpt_id = intent.getInt("hpt_id");
         hpt_name = intent.getString("hpt_name");
+        hpt_phone = intent.getString("hpt_phone");
+        address = intent.getString("address");
 
         fetchDetail(hpt_id);  // 레트로핏으로 정보 불러오기
         hitUp(hpt_id);  // 조회수 ++
@@ -121,12 +123,11 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
                 rating = Float.parseFloat(info.getRateAvg());
                 String ratingRound = String.format("%.2f", rating);
 
-                name.setText(info.getHpt_name());
+                name.setText(hpt_name);
                 hit.setText(""+hpt_hit);
                 rvcnt.setText("("+info.getReviewCnt()+")");
                 ratingBar2.setRating(rating);
                 rateavg.setText(ratingRound);
-                String phoneData = info.getHpt_phone();
                 String newAddData = info.getAdrs_new();
                 String oldAddData = info.getAdrs_old();
                 if(newAddData != null && !newAddData.isEmpty()){
@@ -135,8 +136,8 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
                 if(oldAddData != null && !oldAddData.isEmpty()){
                     oldAdd.setText("(지번) "+oldAddData);
                 }
-                if(phoneData != null && !phoneData.isEmpty()){
-                    phone.setText(phoneData);
+                if(hpt_phone != null && !hpt_phone.isEmpty()){
+                    phone.setText(hpt_phone);
                 }
             }
 
@@ -154,7 +155,6 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         double lati=0, longti=0;    // 위도, 경도 변수 선언
         List<Address> addressList = null;
         Bundle intent = getIntent().getExtras();
-        String address = intent.getString("address");
 
         try{
             addressList = geocoder.getFromLocationName(
@@ -173,8 +173,8 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         LatLng marker = new LatLng(lati,longti);
 
         markerOptions.position(marker);
-        markerOptions.title(intent.getString("hpt_name"));  // 마커 클릭하면 뜨는 정보
-        markerOptions.snippet(intent.getString("hpt_phone"));
+        markerOptions.title(hpt_name);  // 마커 클릭하면 뜨는 정보
+        markerOptions.snippet(hpt_phone);
         map.addMarker(markerOptions);
 
         map.moveCamera(CameraUpdateFactory.newLatLng(marker));
@@ -194,15 +194,11 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     // 리사이클러뷰 데이터 로드
     private void loadJSON(){
         Bundle intent = getIntent().getExtras();
-        int hpt_id = intent.getInt("hpt_id");
-        //Call<List<ReviewVO>> call = request.getReviewListThree(hpt_id);
         Call<List<ReviewVO>> call = RetrofitInit.getInstance().getService().getReviewListThree(hpt_id);
-
         call.enqueue(new Callback<List<ReviewVO>>() {
             @Override
             public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
                 data = response.body();
-                Log.d("호출",data.toString());
                 adapter = new ReviewDataAdapterThree(data);
                 recyclerView.setAdapter(adapter);
             }
@@ -214,7 +210,6 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         });
 
     }
-
 
     // 병원 조회수 +1
     private void hitUp(int hpt_id){
@@ -240,12 +235,10 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
             switch (item.getItemId()) {
                 // 전화 걸기
                 case R.id.navigation_call:
-                    Bundle intent = getIntent().getExtras(); // 전화번호 받아올 인텐트
-                    String phoneData = intent.getString("hpt_phone"); // 받아온 전화번호 000-0000-0000
-                    if(!phoneData.equals(null) && !phoneData.equals("")){
+                    if(!hpt_phone.equals(null) && !hpt_phone.equals("")){
                         Intent callIntent = new Intent(Intent.ACTION_DIAL); // 전화 다이얼 화면 가는 인텐트
     
-                        String tel = "tel:" + phoneData.replaceAll("[^0-9]",""); // 정규식으로 하이픈 제거
+                        String tel = "tel:" + hpt_phone.replaceAll("[^0-9]",""); // 정규식으로 하이픈 제거
                         callIntent.setData(Uri.parse(tel));
                         try{
                             startActivity(callIntent);
@@ -258,10 +251,9 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
                     return true;
                 // 후기 작성 페이지로 이동
                 case R.id.navigation_rvwrite:
-                    Bundle intent2 = getIntent().getExtras();   // 병원 이름, 아이디 받아올 인텐트
                     Intent writeIntent = new Intent(VetDetail.this, ReviewWrite.class); // 후기 작성 화면 가는 인텐트
-                    writeIntent.putExtra("hpt_id", intent2.getInt("hpt_id"));
-                    writeIntent.putExtra("hpt_name", intent2.getString("hpt_name"));
+                    writeIntent.putExtra("hpt_id", hpt_id);
+                    writeIntent.putExtra("hpt_name", hpt_name);
                     startActivity(writeIntent);
                     return true;
             }
