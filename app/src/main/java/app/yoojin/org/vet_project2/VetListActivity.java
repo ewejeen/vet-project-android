@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,11 +42,12 @@ public class VetListActivity extends AppCompatActivity{
     private List<VetVO> data;
     private VetDataAdapter adapter;
     private TextView textView, total;
-    Toolbar topToolbar;
-    Spinner sortSpinner;
-    String selectItem;
+    private Toolbar topToolbar;
+    private Spinner sortSpinner;
+    private String selectItem;
     private SearchView searchView;
     private  VetVO vetVO;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +84,11 @@ public class VetListActivity extends AppCompatActivity{
             textView.setText("'"+intent.getString("province") +" "+ intent.getString("city")+"'");
         }
 
+        // 리사이클러뷰 밑으로 당겨서 새로고침
+        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(swipeListener);
 
-    }
+    }   // End of onCreate()
 
     // Bottom Navigation 리스너
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -114,6 +119,7 @@ public class VetListActivity extends AppCompatActivity{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         //loadJSON();
+
         Bundle intent = getIntent().getExtras();
         if(intent.getString("searchKeyword")!=null) {
             searchByName();
@@ -293,6 +299,20 @@ public class VetListActivity extends AppCompatActivity{
         }
     };
 
+    // SwipeRefreshLayout (당겨서 새로고침) 리스너
+    SwipeRefreshLayout.OnRefreshListener swipeListener = new SwipeRefreshLayout.OnRefreshListener(){
+        @Override
+        public void onRefresh() {
+            // 새로고침 코드
+            initViews();
+            sortSpinner.setSelection(0);
+            // 새로고침 완료
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    };
+
+    /*SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(swipeListener);*/
 
     // Top Navigation에 top_navigation.xml을 집어넣는다 + 서치뷰 검색
     @Override
@@ -329,7 +349,8 @@ public class VetListActivity extends AppCompatActivity{
 
         return true;
     }
-// Top Navigation에 삽입된 메뉴에 대해서 이벤트 처리
+
+    // Top Navigation에 삽입된 메뉴에 대해서 이벤트 처리
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
