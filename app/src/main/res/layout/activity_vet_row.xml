@@ -9,13 +9,13 @@
     card_view:cardCornerRadius="5dp">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="289dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="left|center_vertical"
         android:orientation="vertical"
         android:paddingLeft="20dp"
         android:paddingTop="12dp"
-        android:paddingRight="20dp"
+        android:paddingRight="10dp"
         android:paddingBottom="12dp">
 
         <TextView
@@ -54,11 +54,13 @@
 
         <TextView
             android:id="@+id/adrs"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
+            android:layout_marginRight="5dp"
             android:text="주소"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            card_view:lineHeight="14dp" />
 
     </LinearLayout>
 
@@ -66,6 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        android:layout_marginLeft="5dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -85,7 +88,8 @@
                 android:layout_toStartOf="@+id/review_cnt"
                 android:layout_toLeftOf="@+id/review_cnt"
                 android:text="후기"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/review_cnt"
@@ -97,7 +101,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="20dp"
                 android:text="N"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,7 +121,8 @@
                 android:layout_toStartOf="@+id/review_cnt"
                 android:layout_toLeftOf="@+id/review_cnt"
                 android:text="조회"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/hitCnt"
@@ -128,7 +134,8 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="20dp"
                 android:text="N"
-                android:textColor="@android:color/darker_gray" />
+                android:textColor="@android:color/darker_gray"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>

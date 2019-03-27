@@ -150,23 +150,29 @@ public class ReviewDetail extends AppCompatActivity {
         call.enqueue(new Callback<List<ReviewVO>>() {
             @Override
             public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
-                List<ReviewVO> data = response.body();
-                rv_title.setText(data.get(0).getRv_title());
-                rv_rate.setText(String.format("%.2f",data.get(0).getHpt_rate()));
-                rv_reg_date.setText(data.get(0).getRv_reg_date());
-                visit_date.setText(data.get(0).getVisit_date());
+                ReviewVO vo = response.body().get(0);
+                rv_title.setText(vo.getRv_title());
+                rv_rate.setText(String.format("%.2f",vo.getHpt_rate()));
+                rv_reg_date.setText(vo.getRv_reg_date());
+
+                // 방문일 날짜 형식 바꾸기 위함
+                String[] dateArr = vo.getVisit_date().split("-");
+                String date = dateArr[0]+"년 "+dateArr[1]+"월 "+dateArr[2]+"일";
+
+                visit_date.setText(date);
+
+
 
                 // 재방문 or 첫방문
-                int vis = data.get(0).getVisit_is_new();
-                if(vis==0){
+                if(vo.getVisit_is_new()==0){
                     visit_is_new.setText("첫 방문");
-                } else if(vis==1){
+                } else if(vo.getVisit_is_new()==1){
                     visit_is_new.setText("재방문");
                 }
 
-                pet_type.setText(data.get(0).getPet_type());
-                rv_content.setText(data.get(0).getRv_content());
-                ratingBar.setRating(Float.parseFloat(String.format("%.2f",data.get(0).getHpt_rate())));
+                pet_type.setText(vo.getPet_type());
+                rv_content.setText(vo.getRv_content());
+                ratingBar.setRating(Float.parseFloat(String.format("%.2f",vo.getHpt_rate())));
             }
 
             @Override
@@ -225,7 +231,10 @@ public class ReviewDetail extends AppCompatActivity {
             Intent updateIntent = new Intent(getApplicationContext(), ReviewUpdate.class);
             // 병원명, 방문일, 평점, 반려동물 종류, 방문여부, 제목, 내용 넘겨주기: 다 text임!!
             updateIntent.putExtra("hpt_name", hpt_name.getText().toString());
-            updateIntent.putExtra("visit_date", visit_date.getText().toString());
+
+            String[] str = visit_date.getText().toString().split(" ");
+            String date = str[0].substring(0, str[0].length()-1)+"-"+str[1].substring(0, str[1].length()-1)+"-"+str[2].substring(0, str[2].length()-1);
+            updateIntent.putExtra("visit_date", date);
             updateIntent.putExtra("rv_rate", rv_rate.getText().toString());
             updateIntent.putExtra("pet_type", pet_type.getText().toString());
             updateIntent.putExtra("visit_is_new", visit_is_new.getText().toString());

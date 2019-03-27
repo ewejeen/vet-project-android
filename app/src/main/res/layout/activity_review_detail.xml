@@ -158,9 +158,12 @@
 
                 <TextView
                     android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="N방문" />
+                    android:layout_width="50dp"
+                    android:layout_height="25dp"
+                    android:gravity="center_vertical|end"
+                    android:text="N방문"
+                    android:textColor="@color/colorBlue"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -186,8 +189,8 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="25dp"
                 app:srcCompat="@android:drawable/sym_def_app_icon" />
 
             <TextView
@@ -199,7 +202,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginBottom="15dp"
                 android:orientation="horizontal"
                 android:paddingLeft="20dp"
@@ -220,19 +223,12 @@
                     android:text="삭제" />
             </LinearLayout>
 
-            <View
-                android:id="@+id/barBorder5"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/common_google_signin_btn_text_dark_disabled" />
-
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:layout_marginBottom="5dp"
                 android:text="댓글"
                 android:textColor="@color/colorHptName"
                 android:textSize="20sp" />
@@ -257,14 +253,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:text="등록" />
-
-            <View
-                android:id="@+id/barBorder4"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/common_google_signin_btn_text_dark_disabled" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/cmt_recycler"

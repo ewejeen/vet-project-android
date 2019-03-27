@@ -41,14 +41,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-//import net.daum.mf.map.api.MapView;
-
-
 public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
-    private Retrofit retrofit;
     private List<ReviewVO> data;
-    private String hitData;
     private ReviewDataAdapterThree adapter;
     private Toolbar topToolbar;
     private TextView name, newAdd, oldAdd, phone, hit, rvcnt, rateavg;
@@ -56,6 +51,10 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     private Geocoder geocoder;
     private RecyclerView recyclerView;
     private Button moreBtn;
+
+    private String hpt_name;
+    private int hpt_id, hpt_hit;
+    private float rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,39 +83,11 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         hit = findViewById(R.id.hit);
 
         Bundle intent = getIntent().getExtras();
-        int hpt_id = intent.getInt("hpt_id");
-        int hpt_hit = intent.getInt("hpt_hit");
-        hitUp(hpt_id);
-        hpt_hit++; // 조회수+1
+        hpt_id = intent.getInt("hpt_id");
+        hpt_name = intent.getString("hpt_name");
 
-        float rating = Float.valueOf(intent.getString("ratingAvg"));
-        String ratingRound = String.format("%.2f", rating);
-
-        name.setText(intent.getString("hpt_name"));
-        hit.setText(""+hpt_hit);
-        rvcnt.setText("("+intent.getString("review_cnt")+")");
-        ratingBar2.setRating(rating);
-        rateavg.setText(ratingRound);
-        String phoneData = intent.getString("hpt_phone");
-        String newAddData = intent.getString("adrs_new");
-        String oldAddData = intent.getString("adrs_old");
-        if(newAddData != null && !newAddData.isEmpty()){
-            newAdd.setText(intent.getString("adrs_new"));
-        }
-        if(oldAddData != null && !oldAddData.isEmpty()){
-            oldAdd.setText("(지번) "+intent.getString("adrs_old"));
-        }
-        if(phoneData != null && !phoneData.isEmpty()){
-           phone.setText(intent.getString("hpt_phone"));
-        }
-
-        /* 다음 지도 API
-        MapView mapView = new MapView(this);
-        mapView.setDaumMapApiKey("80304d09c78df0a620a4fd6c4ab990fb");
-
-        RelativeLayout mapViewContainer = findViewById(R.id.mapView);
-        mapViewContainer.addView(mapView);
-        */
+        fetchDetail(hpt_id);  // 레트로핏으로 정보 불러오기
+        hitUp(hpt_id);  // 조회수 ++
 
         // 구글 지도 API
         FragmentManager fragmentManager = getFragmentManager();
@@ -129,17 +100,51 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 Bundle intent = getIntent().getExtras(); // 병원 이름과 아이디 받아와서 보내주기 위함
-                String hptname = intent.getString("hpt_name");
-                int hptid = intent.getInt("hpt_id");
                 Intent moreIntent = new Intent(v.getContext(), ReviewList.class);
-                moreIntent.putExtra("hpt_name",hptname);
-                moreIntent.putExtra("hpt_id",hptid);
+                moreIntent.putExtra("hpt_name",hpt_name);
+                moreIntent.putExtra("hpt_id",hpt_id);
                 startActivity(moreIntent);
             }
         });
 
         initViews();
+    }
 
+    private void fetchDetail(int hpt_id){
+        Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetDetail(hpt_id);
+        call.enqueue(new Callback<List<VetVO>>() {
+            @Override
+            public void onResponse(Call<List<VetVO>> call, Response<List<VetVO>> response) {
+                VetVO info = response.body().get(0);
+
+                hpt_hit = info.getHpt_hit();
+                rating = Float.parseFloat(info.getRateAvg());
+                String ratingRound = String.format("%.2f", rating);
+
+                name.setText(info.getHpt_name());
+                hit.setText(""+hpt_hit);
+                rvcnt.setText("("+info.getReviewCnt()+")");
+                ratingBar2.setRating(rating);
+                rateavg.setText(ratingRound);
+                String phoneData = info.getHpt_phone();
+                String newAddData = info.getAdrs_new();
+                String oldAddData = info.getAdrs_old();
+                if(newAddData != null && !newAddData.isEmpty()){
+                    newAdd.setText(newAddData);
+                }
+                if(oldAddData != null && !oldAddData.isEmpty()){
+                    oldAdd.setText("(지번) "+oldAddData);
+                }
+                if(phoneData != null && !phoneData.isEmpty()){
+                    phone.setText(phoneData);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VetVO>> call, Throwable t) {
+                Log.d("VetDetail 에러",t.getMessage());
+            }
+        });
     }
 
     // 구글 지도 API
@@ -217,9 +222,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                Log.d("리스폰스","성공이당");
-                hitData = response.body();
-                Log.d("는",hitData.toString());
+                Log.d("조회수+1","성공");
             }
 
             @Override
@@ -228,9 +231,6 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
     }
-
-
-
 
     // Bottom Navigation 리스너
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
