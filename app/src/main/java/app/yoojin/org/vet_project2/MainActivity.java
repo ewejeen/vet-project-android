@@ -415,8 +415,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(addressList!=null){
-                Log.d("구글결과",addressList.get(0).getAddressLine(0));
-                // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
+                 // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
                 String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
                 nowAddress = addressList.get(0).getAddressLine(0).substring(4);
                 nowProvince = adrs[1];

@@ -65,7 +65,8 @@ public class VetListActivity extends AppCompatActivity{
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initViews();
-
+        // 정렬 스피너
+        sortSpinner = findViewById(R.id.sortSpinner);
 
         textView = findViewById(R.id.textView);
         Bundle intent = getIntent().getExtras();
@@ -124,14 +125,43 @@ public class VetListActivity extends AppCompatActivity{
         }
     }
 
-    // 정렬 관련
-    private final static Comparator myComparator = new Comparator() {
+   /* // 정렬 관련
+    private final static Comparator rateComparator = new Comparator() {
         private final Collator collator = Collator.getInstance();
+
         @Override
         public int compare(Object o1, Object o2) {
-            return collator.compare(o1.toString(), o2.toString());
+            if(Float.parseFloat(o1.getRateAvg()) < Float.parseFloat(o2.getRateAvg())){
+                return 1;
+            } else if(Float.parseFloat(o1.getRateAvg()) > Float.parseFloat(o2.getRateAvg())){
+                return -1;
+            }
+            return 0;
         }
-    };
+
+        @Override
+        public int compare(VetVO o1, VetVO o2) {
+            if(Float.parseFloat(o1.getRateAvg()) < Float.parseFloat(o2.getRateAvg())){
+                return 1;
+            } else if(Float.parseFloat(o1.getRateAvg()) > Float.parseFloat(o2.getRateAvg())){
+                return -1;
+            }
+            return 0;
+        }
+    };*/
+    /*Collections.sort(data, new Comparator<VetVO>() {
+        @Override
+        public int compare(VetVO o1, VetVO o2) {
+            if(Float.parseFloat(o1.getRateAvg()) < Float.parseFloat(o2.getRateAvg())){
+                return 1;
+            } else if(Float.parseFloat(o1.getRateAvg()) > Float.parseFloat(o2.getRateAvg())){
+                return -1;
+            }
+            return 0;
+        }
+        */
+
+
 
     // 상호명으로 검색
     private void searchByName(){
@@ -140,32 +170,15 @@ public class VetListActivity extends AppCompatActivity{
         //Call<List<VetVO>> call = request.vetGetByName(searchKeyword);
         Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByName(searchKeyword);
 
-        // 정렬 스피너
-        sortSpinner = findViewById(R.id.sortSpinner);
+
         call.enqueue(new Callback<List<VetVO>>() {
             @Override
             public void onResponse(Call<List<VetVO>> call, final Response<List<VetVO>> response) {
-                /*
-                sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selectItem = parent.getItemAtPosition(position).toString(); //상호명 or 지역
-                        switch (selectItem){
-                            case "상호명 오름차순":
-                                data = response.body();
-                            case "상호명 내림차순":
-                                data = response.body();
-                                Collections.reverse(data);
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        data = response.body();
-                    }
-                }); */
 
                 data = response.body();
+
+                sortSpinner.setOnItemSelectedListener(spinnerListener);
+
                 adapter = new VetDataAdapter(data);
                 recyclerView.setAdapter(adapter);
 
@@ -199,31 +212,7 @@ public class VetListActivity extends AppCompatActivity{
             public void onResponse(Call<List<VetVO>> call, Response<List<VetVO>> response) {
                 data = response.body();
 
-                // 평점 높은 순 정렬
-                /*Collections.sort(data, new Comparator<VetVO>() {
-                    @Override
-                    public int compare(VetVO o1, VetVO o2) {
-                        if(Float.parseFloat(o1.getRateAvg()) < Float.parseFloat(o2.getRateAvg())){
-                            return 1;
-                        } else if(Float.parseFloat(o1.getRateAvg()) > Float.parseFloat(o2.getRateAvg())){
-                            return -1;
-                        }
-                        return 0;
-                    }
-                });*/
-
-                // 후기 많은 순 정렬
-                /*Collections.sort(data, new Comparator<VetVO>() {
-                    @Override
-                    public int compare(VetVO o1, VetVO o2) {
-                        if(Float.parseFloat(o1.getReviewCnt()) < Float.parseFloat(o2.getReviewCnt())){
-                            return 1;
-                        } else if(Float.parseFloat(o1.getReviewCnt()) > Float.parseFloat(o2.getReviewCnt())){
-                            return -1;
-                        }
-                        return 0;
-                    }
-                });*/
+                sortSpinner.setOnItemSelectedListener(spinnerListener);
 
                 adapter = new VetDataAdapter(data);
                 recyclerView.setAdapter(adapter);
@@ -255,9 +244,14 @@ public class VetListActivity extends AppCompatActivity{
         Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByRegion(region);
         call.enqueue(new Callback<List<VetVO>>() {
             @Override
-            public void onResponse(Call<List<VetVO>> call, Response<List<VetVO>> response) {
+            public void onResponse(Call<List<VetVO>> call, final Response<List<VetVO>> response) {
                 data = response.body();
+
+                sortSpinner.setOnItemSelectedListener(spinnerListener);
+
+                Log.d("스피너","안호출");
                 adapter = new VetDataAdapter(data);
+                adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
 
                 total = findViewById(R.id.total);
@@ -272,20 +266,62 @@ public class VetListActivity extends AppCompatActivity{
         });
     }
 
-    /*RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener(){
+    // 정렬 스피너 리스너
+    AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener(){
         @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-
-            LinearLayoutManager layoutManager = LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
-            int totalItemCount = layoutManager.getItemCount();
-            int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
-            if(lastItem >= totalItemCount - 1){
-                Toast.makeText(getApplicationContext(), "총 "+totalItemCount+"건", Toast.LENGTH_SHORT).show();
-                Log.d("마지막: ","마지막");
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            selectItem = parent.getItemAtPosition(position).toString(); //상호명 or 지역
+            switch (selectItem){
+                case "상호명 오름차순":
+                    Log.d("상호명","오름차순");
+                    SortWithSpinner.NameAscCompare nasc = new SortWithSpinner.NameAscCompare();
+                    nasc.compare(data.get(0), data.get(1));
+                    Collections.sort(data, nasc);
+                    break;
+                case "상호명 내림차순":
+                    Log.d("상호명","내림차순");
+                    SortWithSpinner.NameDescCompare ndesc = new SortWithSpinner.NameDescCompare();
+                    ndesc.compare(data.get(0), data.get(1));
+                    Collections.sort(data, ndesc);
+                    break;
+                case "지역명 오름차순":
+                    Log.d("지역명","오름차순");
+                    SortWithSpinner.RegionAscCompare rasc = new SortWithSpinner.RegionAscCompare();
+                    rasc.compare(data.get(0), data.get(1));
+                    Collections.sort(data, rasc);
+                    break;
+                case "지역명 내림차순":
+                    Log.d("지역명","내림차순");
+                    SortWithSpinner.RegionDescCompare rdesc = new SortWithSpinner.RegionDescCompare();
+                    rdesc.compare(data.get(0), data.get(1));
+                    Collections.sort(data, rdesc);
+                    break;
+                case "평점 높은 순":
+                    Log.d("평점","높은 순");
+                    SortWithSpinner.RateCompare rate = new SortWithSpinner.RateCompare();
+                    rate.compare(data.get(0), data.get(1));
+                    Collections.sort(data, rate);
+                    break;
+                case "후기 많은 순":
+                    Log.d("후기","많은 순");
+                    SortWithSpinner.ReviewCompare review = new SortWithSpinner.ReviewCompare();
+                    review.compare(data.get(0), data.get(1));
+                    Collections.sort(data, review);
+                    break;
+                case "조회 많은 순":
+                    Log.d("조회","많은 순");
+                    SortWithSpinner.ViewCompare viewCompare = new SortWithSpinner.ViewCompare();
+                    viewCompare.compare(data.get(0), data.get(1));
+                    Collections.sort(data, viewCompare);
+                    break;
             }
         }
-    };*/
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            Log.d("낫띵","셀렉티드");
+        }
+    };
 
 
     // Top Navigation에 top_navigation.xml을 집어넣는다 + 서치뷰 검색
