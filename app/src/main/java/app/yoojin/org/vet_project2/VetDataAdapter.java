@@ -79,6 +79,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             itemHolder.ratingBar.setRating(rating);
             String ratingRound = String.format("%.2f", rating);
             itemHolder.rating.setText(ratingRound);
+            itemHolder.hitCnt.setText(String.format("%d",list.get(position).getHpt_hit()));
 
             final int hpt_id = list.get(position).getHpt_id();
             final String hpt_name = list.get(position).getHpt_name();
@@ -123,7 +124,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
 
     // 기본 아이템 뷰홀더
     public class ItemViewHolder extends  RecyclerView.ViewHolder{
-        private TextView hpt_name, adrs, review_cnt, rating;
+        private TextView hpt_name, adrs, review_cnt, rating, hitCnt;
         private RatingBar ratingBar;
 
         public ItemViewHolder(View view){
@@ -133,6 +134,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             review_cnt = view.findViewById(R.id.review_cnt);
             ratingBar = view.findViewById(R.id.ratingBar);
             rating = view.findViewById(R.id.rating);
+            hitCnt = view.findViewById(R.id.hitCnt);
         }
     }
 
