@@ -351,6 +351,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_notice:
                     Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);
                     startActivity(intent2);
+                    //startActivityForResult(intent2,101);
                     return true;
             }
             return false;

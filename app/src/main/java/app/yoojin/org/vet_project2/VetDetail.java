@@ -108,6 +108,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
         // 후기 더 보기 버튼
         moreBtn = findViewById(R.id.button2);
+        Log.d("아이디",hpt_id+"");
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

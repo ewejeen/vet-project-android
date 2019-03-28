@@ -1,7 +1,9 @@
 package app.yoojin.org.vet_project2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +40,23 @@ public class ReviewDataAdapterThree extends RecyclerView.Adapter {
         itemHolder.rvtitle.setText(list.get(position).getRv_title());
         itemHolder.rvdate.setText(list.get(position).getRv_reg_date());
         itemHolder.rvcon.setText(list.get(position).getRv_content());
+
+        itemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = v.getContext();
+                Bundle bundle = ((Activity) context).getIntent().getExtras();   // 어댑터에서 intent값 받아오기
+
+                Intent intent = new Intent(v.getContext(),ReviewDetail.class);
+                intent.putExtra("hpt_id",list.get(position).getHpt_id());
+                intent.putExtra("hpt_name",bundle.getString("hpt_name"));
+                intent.putExtra("rv_id",String.format("%d", list.get(position).getRv_id()));
+
+                v.getContext().startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,8 @@ public class NoticeActivity extends AppCompatActivity {
     private Toolbar topToolbar;
     private SearchView searchView;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +54,10 @@ public class NoticeActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initViews();    // 리사이클러뷰
+
+        // 리사이클러뷰 밑으로 당겨서 새로고침
+        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(swipeListener);
     }
 
     // Bottom Navigation 리스너
@@ -61,11 +68,13 @@ public class NoticeActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     Intent intent = new Intent(NoticeActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
                     finish();
                     return true;
                 case R.id.navigation_findvet:
                     Intent intent2 = new Intent(NoticeActivity.this, ReviewList.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent2);
                     return true;
                 case R.id.navigation_notice:
@@ -103,6 +112,17 @@ public class NoticeActivity extends AppCompatActivity {
             }
         });
     }
+
+    // SwipeRefreshLayout (당겨서 새로고침) 리스너
+    SwipeRefreshLayout.OnRefreshListener swipeListener = new SwipeRefreshLayout.OnRefreshListener(){
+        @Override
+        public void onRefresh() {
+            // 새로고침 코드
+            initViews();
+            // 새로고침 완료
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    };
 
     // Top Navigation에 top_navigation.xml을 집어넣는다
     @Override

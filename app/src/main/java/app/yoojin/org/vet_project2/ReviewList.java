@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -37,6 +38,11 @@ public class ReviewList extends AppCompatActivity {
     private Button writeBtn;
     private SearchView searchView;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private int hpt_id;
+    private String hpt_name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +60,17 @@ public class ReviewList extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        // 인텐트로 값들 받아오기 (null 아니면)
+        final Bundle intent = getIntent().getExtras();
+        if(intent!=null){
+            hpt_name = intent.getString("hpt_name");
+            hpt_id = intent.getInt("hpt_id");
+        }
+
         initViews();
 
         hptname = findViewById(R.id.textView2);
-        final Bundle intent = getIntent().getExtras();
-        hptname.setText("'"+intent.getString("hpt_name")+"'");
+        hptname.setText("'"+hpt_name+"'");
 
         // 후기 작성 버튼 누르면 후기 작성 페이지로 이동
         writeBtn = findViewById(R.id.writeRv);
@@ -66,11 +78,15 @@ public class ReviewList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent writeIntent = new Intent(v.getContext(), ReviewWrite.class);
-                writeIntent.putExtra("hpt_id", intent.getInt("hpt_id"));
-                writeIntent.putExtra("hpt_name", intent.getString("hpt_name"));
+                writeIntent.putExtra("hpt_id", hpt_id);
+                writeIntent.putExtra("hpt_name", hpt_name);
                 startActivity(writeIntent);
             }
         });
+
+        // 리사이클러뷰 밑으로 당겨서 새로고침
+        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setOnRefreshListener(swipeListener);
     }
 
     // Bottom Navigation 리스너
@@ -107,11 +123,7 @@ public class ReviewList extends AppCompatActivity {
 
     // 후기 리스트 로드
     private void loadReview(){
-        Bundle intent = getIntent().getExtras();
-        int hpt_id = intent.getInt("hpt_id");
-
         Call<List<ReviewVO>> call = RetrofitInit.getInstance().getService().getReviewList(hpt_id);
-
         call.enqueue(new Callback<List<ReviewVO>>() {
             @Override
             public void onResponse(Call<List<ReviewVO>> call, Response<List<ReviewVO>> response) {
@@ -130,6 +142,17 @@ public class ReviewList extends AppCompatActivity {
             }
         });
     }
+
+    // SwipeRefreshLayout (당겨서 새로고침) 리스너
+    SwipeRefreshLayout.OnRefreshListener swipeListener = new SwipeRefreshLayout.OnRefreshListener(){
+        @Override
+        public void onRefresh() {
+            // 새로고침 코드
+            initViews();
+            // 새로고침 완료
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    };
 
     // Top Navigation에 top_navigation.xml을 집어넣는다
     @Override
