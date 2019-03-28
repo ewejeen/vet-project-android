@@ -5,72 +5,40 @@ import java.util.Comparator;
 
 public class SortWithSpinner {
 
-    /**
-     * 이름 오름차순
-     *
-     * @author falbb
-     */
+    // 이름 오름차순
     static class NameAscCompare implements Comparator<VetVO> {
-        /**
-         * 오름차순(ASC)
-         */
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
             return arg0.getHpt_name().compareTo(arg1.getHpt_name());
         }
     }
 
-    /**
-     * 이름 내림차순
-     *
-     * @author falbb
-     */
+    // 이름 내림차순
     static class NameDescCompare implements Comparator<VetVO> {
-        /**
-         * 내림차순(DESC)
-         */
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
             return arg1.getHpt_name().compareTo(arg0.getHpt_name());
         }
     }
 
-    /**
-     * 지역 오름차순
-     *
-     * @author falbb
-     */
+    // 지역명 오름차순
     static class RegionAscCompare implements Comparator<VetVO> {
-        /**
-         * 오름차순(ASC)
-         */
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
             return arg0.getAddress().compareTo(arg1.getAddress());
         }
     }
 
-    /**
-     * 지역 내림차순
-     *
-     * @author falbb
-     */
+    // 지역명 내림차순
     static class RegionDescCompare implements Comparator<VetVO> {
-        /**
-         * 내림차순(DESC)
-         */
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
             return arg1.getAddress().compareTo(arg0.getAddress());
         }
     }
 
-    /**
-     * 평점 높은 순
-     *
-     * @author falbb
-     */
-    static class RateCompare implements Comparator<VetVO> {
+    // 평점 높은 순
+     static class RateCompare implements Comparator<VetVO> {
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
             //return Float.parseFloat(arg0.getRateAvg()) > Float.parseFloat(arg1.getRateAvg()) ? -1 : Float.parseFloat(arg0.getRateAvg()) < Float.parseFloat(arg1.getRateAvg()) ? 1 : 0;
@@ -78,11 +46,7 @@ public class SortWithSpinner {
         }
     }
 
-    /**
-     * 후기 많은 순
-     *
-     * @author falbb
-     */
+    // 후기 많은 순
     static class ReviewCompare implements Comparator<VetVO> {
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
@@ -91,11 +55,7 @@ public class SortWithSpinner {
         }
     }
 
-    /**
-     * 조회 많은 순
-     *
-     * @author falbb
-     */
+    // 조회 많은 순
     static class ViewCompare implements Comparator<VetVO> {
         @Override
         public int compare(VetVO arg0, VetVO arg1) {
@@ -103,6 +63,4 @@ public class SortWithSpinner {
             //return Integer.compare(Integer.parseInt(arg0.getReviewCnt()), Integer.parseInt(arg1.getReviewCnt()));
         }
     }
-
-
 }

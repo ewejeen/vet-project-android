@@ -1,6 +1,5 @@
 package app.yoojin.org.vet_project2;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +17,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-// public class VetDataAdapter extends RecyclerView.Adapter<VetDataAdapter.ViewHolder> {
 public class ReviewCommentAdapter extends RecyclerView.Adapter {
     private List<ReviewVO> list;
 
@@ -102,5 +100,4 @@ public class ReviewCommentAdapter extends RecyclerView.Adapter {
             cmtdelete = view.findViewById(R.id.cmtdelete);
         }
     }
-
 }

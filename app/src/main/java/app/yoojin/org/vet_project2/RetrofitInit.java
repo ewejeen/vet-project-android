@@ -1,7 +1,5 @@
 package app.yoojin.org.vet_project2;
 
-import com.google.gson.Gson;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

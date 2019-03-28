@@ -22,19 +22,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VetListActivity extends AppCompatActivity{
 
@@ -46,7 +40,6 @@ public class VetListActivity extends AppCompatActivity{
     private Spinner sortSpinner;
     private String selectItem;
     private SearchView searchView;
-    private  VetVO vetVO;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
