@@ -61,8 +61,8 @@ public interface RetrofitService {
             @Query("rv_id") int rv_id
     );
 
-    @Multipart
     @POST("/vetproject_v2/review/addAppReview.do")
+    @Multipart
     Call<String> insertReview(
             @Part MultipartBody.Part imageFile,
             @Part("hpt_id") int hpt_id,
@@ -81,16 +81,16 @@ public interface RetrofitService {
     );
 
     @POST("/vetproject_v2/review/updateReview.do")
-    @FormUrlEncoded
+    @Multipart
     Call<String> updateReview(
-            @Field("hpt_rate") double hpt_rate,
-            @Field("visit_date") String visit_date,
-            @Field("pet_type") String pet_type,
-            @Field("visit_is_new") int visit_is_new,
-            @Field("rv_title") String rv_title,
-            @Field("rv_content") String rv_content,
-            @Field("rv_image") String rv_image,
-            @Field("rv_id") int rv_id
+            @Part MultipartBody.Part imageFile,
+            @Part("hpt_rate") double hpt_rate,
+            @Part("visit_date") RequestBody visit_date,
+            @Part("pet_type") RequestBody pet_type,
+            @Part("visit_is_new") int visit_is_new,
+            @Part("rv_title") RequestBody rv_title,
+            @Part("rv_content") RequestBody rv_content,
+            @Part("rv_id") int rv_id
     );
 
     @GET("/vetproject_v2/review/commentList.do")

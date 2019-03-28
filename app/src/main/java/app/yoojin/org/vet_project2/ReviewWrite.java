@@ -232,22 +232,24 @@ public class ReviewWrite extends AppCompatActivity {
 
     private void writeReview(){
         // 프로그레시브 바
-       /* final ProgressDialog progressDialog;
+        final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(ReviewWrite.this);
         progressDialog.setMessage("업로드 진행 중...");
-        progressDialog.show();*/
+        progressDialog.show();
 
         Bundle intent = getIntent().getExtras();
         final int hpt_id = intent.getInt("hpt_id");
         double hpt_rate = Double.parseDouble(ratingRes.getText().toString());
         final String rv_title = title.getText().toString();
         String rv_content = content.getText().toString();
-        String rv_image = "image01.jpg";
+
+        MultipartBody.Part imageFile = null;
+        Log.d("패스",imgPath);
+        // 이미지를 선택하지 않을 경우의 예외 처리
 
         File file = new File(imgPath);
-        Log.d("imgPath2",imgPath);
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
+        imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
 
         RequestBody dateBody = RequestBody.create(MediaType.parse("text/plain"),strDate);
         RequestBody petBody = RequestBody.create(MediaType.parse("text/plain"),pet_type);
@@ -262,7 +264,6 @@ public class ReviewWrite extends AppCompatActivity {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 String data = response.body();
-                Log.d("vo",data);
 
                 Intent confirmIntent = new Intent(getApplicationContext(), ReviewDetail.class);
                 confirmIntent.putExtra("rv_id",data);
@@ -301,39 +302,13 @@ public class ReviewWrite extends AppCompatActivity {
                 Glide
                         .with(getApplicationContext())
                         .load(new File(imgPath))
+                        .error(R.drawable.no_image)
                         .into(img);
 
                 cursor.close();
             }
         }
     }
-
-
-    /*// URI 정보를 이용하여 사진 정보 가져온다
-    private String[] getImageNameToUri(Uri data){
-        String[] proj = {
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.TITLE,
-                MediaStore.Images.Media.ORIENTATION
-        };
-        Cursor cursor = this.getContentResolver().query(data, proj, null, null, null);
-        cursor.moveToFirst();
-
-        int column_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        int column_title = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.TITLE);
-        int column_orientation = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
-
-        mImgPath = cursor.getString(column_data);
-        mImgTitle = cursor.getString(column_title);
-        mImgOrient = cursor.getString(column_orientation);
-        Log.d("mImgPath", mImgPath);
-        Log.d("mImgTitle", mImgTitle);
-        Log.d("mImgOrient", mImgOrient);
-        return new String[]{mImgPath, mImgTitle, mImgOrient};
-    }*/
-
-
-
 
     // Bottom Navigation 리스너
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

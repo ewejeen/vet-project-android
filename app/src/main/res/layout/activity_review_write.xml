@@ -300,6 +300,8 @@
                         android:id="@+id/upImageView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:scaleType="fitCenter"
                         app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
                 </LinearLayout>
             </LinearLayout>

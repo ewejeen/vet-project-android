@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,7 +41,7 @@ public class ReviewDetail extends AppCompatActivity {
     private ImageView rv_image;
     private RatingBar ratingBar;
     private Button deleteBtn, updateBtn, cmtReg;
-    private String hpt_nameT;
+    private String hpt_nameT, imageUriToSend;
     private EditText cmtCon;
     private RecyclerView cmt_recycler;
     private List<ReviewVO> data;
@@ -90,7 +91,6 @@ public class ReviewDetail extends AppCompatActivity {
         cmtReg = findViewById(R.id.cmtReg);
         // 댓글 등록 기능
         cmtReg.setOnClickListener(cmtRegFn);
-
 
         // Top Navigation
         topToolbar = findViewById(R.id.topToolbarSub);
@@ -165,12 +165,14 @@ public class ReviewDetail extends AppCompatActivity {
 
                 visit_date.setText(date);
 
+                // 이미지 나타내기
                 Uri uri = Uri.parse(RetrofitInit.getImageURL()+vo.getRv_image());
-                Log.d("유알아이",uri.toString());
                 Glide
                         .with(getApplicationContext())
                         .load(uri)
+                        .error(R.drawable.no_image)
                         .into(rv_image);
+                imageUriToSend = uri.toString();
 
                 // 재방문 or 첫방문
                 if(vo.getVisit_is_new()==0){
@@ -251,6 +253,7 @@ public class ReviewDetail extends AppCompatActivity {
             updateIntent.putExtra("rv_content", rv_content.getText().toString());
             updateIntent.putExtra("rv_id",rv_id);
             updateIntent.putExtra("hpt_id",hpt_id);
+            updateIntent.putExtra("imageUri",imageUriToSend);
 
             startActivity(updateIntent);
         }
