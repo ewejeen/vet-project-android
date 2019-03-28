@@ -291,10 +291,16 @@
                         android:textStyle="bold" />
 
                     <Button
-                        android:id="@+id/button4"
+                        android:id="@+id/pickImg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="선택하기" />
+
+                    <ImageView
+                        android:id="@+id/upImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
                 </LinearLayout>
             </LinearLayout>
 

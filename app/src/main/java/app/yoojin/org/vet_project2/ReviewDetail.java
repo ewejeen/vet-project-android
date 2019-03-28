@@ -23,6 +23,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +61,8 @@ public class ReviewDetail extends AppCompatActivity {
         rv_image = findViewById(R.id.imageView);
         rv_content = findViewById(R.id.textView20);
         ratingBar = findViewById(R.id.ratingBar4);
+
+        rv_image = findViewById(R.id.imageView);
 
         deleteBtn = findViewById(R.id.button5);
         updateBtn = findViewById(R.id.button3);
@@ -161,7 +165,12 @@ public class ReviewDetail extends AppCompatActivity {
 
                 visit_date.setText(date);
 
-
+                Uri uri = Uri.parse(RetrofitInit.getImageURL()+vo.getRv_image());
+                Log.d("유알아이",uri.toString());
+                Glide
+                        .with(getApplicationContext())
+                        .load(uri)
+                        .into(rv_image);
 
                 // 재방문 or 첫방문
                 if(vo.getVisit_is_new()==0){

@@ -3,11 +3,15 @@ package app.yoojin.org.vet_project2;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
@@ -57,17 +61,17 @@ public interface RetrofitService {
             @Query("rv_id") int rv_id
     );
 
+    @Multipart
     @POST("/vetproject_v2/review/addAppReview.do")
-    @FormUrlEncoded
     Call<String> insertReview(
-            @Field("hpt_id") int hpt_id,
-            @Field("hpt_rate") double hpt_rate,
-            @Field("visit_date") String visit_date,
-            @Field("pet_type") String pet_type,
-            @Field("visit_is_new") int visit_is_new,
-            @Field("rv_title") String rv_title,
-            @Field("rv_content") String rv_content,
-            @Field("rv_image") String rv_image
+            @Part MultipartBody.Part imageFile,
+            @Part("hpt_id") int hpt_id,
+            @Part("hpt_rate") double hpt_rate,
+            @Part("visit_date") RequestBody visit_date,
+            @Part("pet_type") RequestBody pet_type,
+            @Part("visit_is_new") int visit_is_new,
+            @Part("rv_title") RequestBody rv_title,
+            @Part("rv_content") RequestBody rv_content
     );
 
     @POST("/vetproject_v2/review/deleteReview.do")

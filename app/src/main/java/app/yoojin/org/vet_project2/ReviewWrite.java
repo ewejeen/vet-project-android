@@ -1,9 +1,17 @@
 package app.yoojin.org.vet_project2;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -17,19 +25,27 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +57,7 @@ public class ReviewWrite extends AppCompatActivity {
     private Retrofit retrofit;
     private Toolbar topToolbar;
     private TextView hptName, date, ratingRes, textArea;
-    private Button dateBtn;
+    private Button dateBtn, pickImg;
     private RatingBar ratingBar;
     private Spinner spinner2;
     private EditText title, content;
@@ -51,6 +67,17 @@ public class ReviewWrite extends AppCompatActivity {
     private int visit_is_new;
     private String strDate, pet_type, hpt_name;
     private static final int DIALOG_DATE = 1;
+
+    private final int REQ_CODE_SELECT_IMAGE = 1001;
+    private Uri uri;
+
+    private final String IMG_FILE_PATH = "imgfilepath";
+    private final String IMG_FILE_TITLE = "imgtitle";
+    private final String IMG_FILE_ORIENTATION = "imgorientation";
+
+    private String imgPath = null;
+    private String mImgTitle = null;
+    private String mImgOrient = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +188,16 @@ public class ReviewWrite extends AppCompatActivity {
         });
         // 라디오 버튼 값 가져오기 끝
 
+        // 이미지 선택 버튼
+        pickImg = findViewById(R.id.pickImg);
+        pickImg .setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK);
+                openGalleryIntent.setType("image/*");
+                startActivityForResult(openGalleryIntent, REQ_CODE_SELECT_IMAGE);
+            }
+        });
     }   // end of onCreate()
 
 
@@ -194,6 +231,12 @@ public class ReviewWrite extends AppCompatActivity {
     } // 방문일 달력 끝
 
     private void writeReview(){
+        // 프로그레시브 바
+       /* final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ReviewWrite.this);
+        progressDialog.setMessage("업로드 진행 중...");
+        progressDialog.show();*/
+
         Bundle intent = getIntent().getExtras();
         final int hpt_id = intent.getInt("hpt_id");
         double hpt_rate = Double.parseDouble(ratingRes.getText().toString());
@@ -201,7 +244,17 @@ public class ReviewWrite extends AppCompatActivity {
         String rv_content = content.getText().toString();
         String rv_image = "image01.jpg";
 
-        Call<String> call = RetrofitInit.getInstance().getService().insertReview(hpt_id, hpt_rate, strDate, pet_type, visit_is_new, rv_title, rv_content, rv_image);
+        File file = new File(imgPath);
+        Log.d("imgPath2",imgPath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+        MultipartBody.Part imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
+
+        RequestBody dateBody = RequestBody.create(MediaType.parse("text/plain"),strDate);
+        RequestBody petBody = RequestBody.create(MediaType.parse("text/plain"),pet_type);
+        RequestBody titleBody = RequestBody.create(MediaType.parse("text/plain"),rv_title);
+        RequestBody conBody = RequestBody.create(MediaType.parse("text/plain"),rv_content);
+
+        Call<String> call = RetrofitInit.getInstance().getService().insertReview(imageFile, hpt_id, hpt_rate, dateBody, petBody, visit_is_new, titleBody, conBody);
         //Call<List<ReviewVO>> call = request.insertReview(hpt_id, hpt_rate, strDate, pet_type, visit_is_new, rv_title, rv_content, rv_image);
         //Call<String> call = request.insertReview(new ReviewVO(hpt_id, hpt_rate, rv_title, rv_content, rv_image, pet_type, strDate, visit_is_new));
 
@@ -224,41 +277,61 @@ public class ReviewWrite extends AppCompatActivity {
                 Log.d("후기 작성 레트로핏 오류 ", t.getMessage());
             }
         });
-
-
-       /* new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                String data = response.body();
-                Log.d("리스폰스","성공");
-                Log.d("vo",data.toString());
-                Intent confirmIntent = new Intent(getApplicationContext(), ReviewDetail.class);
-                confirmIntent.putExtra("hpt_id",hpt_id);
-                confirmIntent.putExtra("hpt_name", hpt_name);
-
-                //confirmIntent.putExtra("hpt_rate",hpt_rate);
-                // confirmIntent.putExtra("rv_reg_date",);
-                *//*confirmIntent.putExtra("hpt_name",hpt_name);
-                confirmIntent.putExtra("hpt_name",hpt_name);
-                confirmIntent.putExtra("hpt_name",hpt_name);
-                confirmIntent.putExtra("hpt_name",hpt_name);
-                confirmIntent.putExtra("hpt_name",hpt_name);*//*
-                startActivity(confirmIntent);
-                finish();
-            }
-            *//*rv_rate = findViewById(R.id.textView9);
-            rv_reg_date= findViewById(R.id.textView14);
-            visit_date = findViewById(R.id.textView16);
-            visit_is_new = findViewById(R.id.textView17);
-            pet_type = findViewById(R.id.textView19);
-            rv_image = findViewById(R.id.imageView);
-            rv_content = findViewById(R.id.textView20);*//*
-            @Override
-            public void onFailure(String call, Throwable t) {
-                Log.d("Error ",t.getMessage());
-            }
-        });*/
     }
+
+    // 이미지 업로드
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        // 선택된 사진을 받아 서버에 업로드한다
+        if(requestCode == REQ_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
+            if(data == null){
+                Toast.makeText(this, "이미지를 선택해 주세요", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            uri = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, filePathColumn, null,null,null);
+            if(cursor!=null){
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                imgPath = cursor.getString(columnIndex);
+                Log.d("imgPath",imgPath);
+                ImageView img = findViewById(R.id.upImageView);
+                Glide
+                        .with(getApplicationContext())
+                        .load(new File(imgPath))
+                        .into(img);
+
+                cursor.close();
+            }
+        }
+    }
+
+
+    /*// URI 정보를 이용하여 사진 정보 가져온다
+    private String[] getImageNameToUri(Uri data){
+        String[] proj = {
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media.TITLE,
+                MediaStore.Images.Media.ORIENTATION
+        };
+        Cursor cursor = this.getContentResolver().query(data, proj, null, null, null);
+        cursor.moveToFirst();
+
+        int column_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        int column_title = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.TITLE);
+        int column_orientation = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
+
+        mImgPath = cursor.getString(column_data);
+        mImgTitle = cursor.getString(column_title);
+        mImgOrient = cursor.getString(column_orientation);
+        Log.d("mImgPath", mImgPath);
+        Log.d("mImgTitle", mImgTitle);
+        Log.d("mImgOrient", mImgOrient);
+        return new String[]{mImgPath, mImgTitle, mImgOrient};
+    }*/
+
 
 
 

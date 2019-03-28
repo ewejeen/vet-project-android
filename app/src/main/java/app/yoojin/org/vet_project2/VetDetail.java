@@ -1,5 +1,6 @@
 package app.yoojin.org.vet_project2;
 
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -17,11 +18,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -51,6 +56,11 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     private Geocoder geocoder;
     private RecyclerView recyclerView;
     private Button moreBtn;
+
+    // 구글 지도 스크롤 막기
+    private MapFragment mapFragment;
+    private ImageView transparent;
+    private ScrollView scrollView;
 
     private String hpt_name, hpt_phone, address;
     private int hpt_id, hpt_hit;
@@ -93,7 +103,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
         // 구글 지도 API
         FragmentManager fragmentManager = getFragmentManager();
-        MapFragment mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.mapView);
+        mapFragment = (MapFragment) fragmentManager.findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this); //implement 확인
 
         // 후기 더 보기 버튼
@@ -109,8 +119,41 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
+        // 구글 지도 스크롤 막기
+        scrollView = findViewById(R.id.scrollView);
+        transparent = findViewById(R.id.imagetrans);
+        /*transparent.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Toast.makeText(VetDetail.this, "onTouch", Toast.LENGTH_SHORT).show();
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Disallow ScrollView to intercept touch events.
+                        Toast.makeText(VetDetail.this, "ACTION_DOWN", Toast.LENGTH_SHORT).show();
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        // Disable touch on transparent view
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        // Allow ScrollView to intercept touch events.
+                        Toast.makeText(VetDetail.this, "ACTION_UP", Toast.LENGTH_SHORT).show();
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Toast.makeText(VetDetail.this, "ACTION_MOVE", Toast.LENGTH_SHORT).show();
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        break;
+
+                }
+                VetDetail.super.onTouchEvent(event);
+                return true;
+            }
+        });*/
+
+        // 구글 지도 스크롤 막기 끝
+
         initViews();
-    }
+    } // end of onCreate()
 
     private void fetchDetail(int hpt_id){
         Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetDetail(hpt_id);
@@ -179,6 +222,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
         map.moveCamera(CameraUpdateFactory.newLatLng(marker));
         map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        map.getUiSettings().setScrollGesturesEnabled(true); // 맵 움직이지 않게 함
     }
     /* 구글 지도 끝 */
 
