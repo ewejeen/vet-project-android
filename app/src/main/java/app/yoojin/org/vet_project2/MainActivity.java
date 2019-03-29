@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -339,9 +341,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_notice:
-                    Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);
+                    /*Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);
                     startActivity(intent2);
-                    //startActivityForResult(intent2,101);
+                    //startActivityForResult(intent2,101);*/
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.container ,new NoticeFragment2());
+                    fragmentTransaction.commit();
                     return true;
             }
             return false;
