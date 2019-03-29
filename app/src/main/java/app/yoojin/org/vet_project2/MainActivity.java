@@ -13,6 +13,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    android.support.v7.widget.Toolbar topToolbar;
+    Toolbar topToolbar;
     Spinner spinner;
     String selectItem, nowAddress, nowProvince, nowCity;
     FrameLayout locationL, frame;
@@ -271,11 +272,23 @@ public class MainActivity extends AppCompatActivity {
         searchIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
-                Intent intent = new Intent(context,VetListActivity.class);
+                VetListFragment vetListFragment = new VetListFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("province", choice_province);
+                bundle.putString("city", choice_city);
+
+                vetListFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
+                //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
+                fragmentTransaction.commit();
+
+                /*Intent intent = new Intent(context,VetListActivity.class);
                 intent.putExtra("province", choice_province);
                 intent.putExtra("city", choice_city);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 
@@ -287,9 +300,21 @@ public class MainActivity extends AppCompatActivity {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),VetListActivity.class);
+                VetListFragment vetListFragment = new VetListFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("searchKeyword", searchWord.getText().toString());
+
+                vetListFragment.setArguments(bundle);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
+                //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
+                fragmentTransaction.commit();
+
+                /*Intent intent = new Intent(getApplicationContext(),VetListActivity.class);
                 intent.putExtra("searchKeyword", searchWord.getText().toString());
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
 
@@ -304,17 +329,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent listIntent = new Intent(v.getContext(), VetListActivity.class);
                 if(gps.isGetLocation()) {
-                    listIntent.putExtra("lat",gps.getLatitude());
-                    listIntent.putExtra("lng",gps.getLongtitude());
                     nowProvince = getCurrentLocation()[1];
                     nowCity = getCurrentLocation()[2];
-                    // 현재 시도, 시군구로 검색
-                    Log.v("인텐트도",nowProvince);
-                    Log.v("인텐트시",nowCity);
+
+                    VetListFragment vetListFragment = new VetListFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("lat", gps.getLatitude());
+                    bundle.putDouble("lng", gps.getLongtitude());
+                    bundle.putString("nowP", nowProvince);
+                    bundle.putString("nowC", nowCity);
+                    vetListFragment.setArguments(bundle);
+
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
+                    //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
+                    fragmentTransaction.commit();
+
+                    /*listIntent.putExtra("lat",gps.getLatitude());
+                    listIntent.putExtra("lng",gps.getLongtitude());
                     listIntent.putExtra("nowP",nowProvince);
                     listIntent.putExtra("nowC",nowCity);
 
-                    startActivity(listIntent);
+                    startActivity(listIntent);*/
                 } else{
                     Toast.makeText(MainActivity.this, "위치 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -336,6 +373,8 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
                     return true;
                 case R.id.navigation_findvet:
                     Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();

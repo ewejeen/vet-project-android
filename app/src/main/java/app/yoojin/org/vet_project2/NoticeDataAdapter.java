@@ -56,7 +56,6 @@ public class NoticeDataAdapter extends RecyclerView.Adapter {
         });
     }
 
-    // 마지막에 푸터 추가 위해 +1
     @Override
     public int getItemCount() {
         return list.size();
