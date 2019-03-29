@@ -341,12 +341,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_notice:
-                    /*Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);
-                    startActivity(intent2);
-                    //startActivityForResult(intent2,101);*/
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.container ,new NoticeFragment2());
+                    fragmentTransaction.replace(R.id.linear ,new NoticeFragment()); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체한다
+                    //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
                     fragmentTransaction.commit();
                     return true;
             }
