@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitInit {
 
     //회사
-    private static final String BASE_URL = "http://192.168.1.33:8080";
+    //private static final String BASE_URL = "http://192.168.1.33:8080";
     //집
     //private static final String BASE_URL = "http://192.168.35.241:8080";
     //private static final String BASE_URL = "http://192.168.35.146:8080";
@@ -19,6 +19,8 @@ public class RetrofitInit {
     //private static final String BASE_URL = "http://172.30.48.188:8080";
     //private static final String BASE_URL = "http://172.30.120.188:8080";
     //private static final String BASE_URL = "http://172.30.121.45:8080";
+
+    private static final String BASE_URL = "http://172.20.10.6:8080";
 
     private static final String IMAGE_URL = "/vetproject_v2/images/upload/";
 

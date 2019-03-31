@@ -9,10 +9,10 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/topToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/topToolbar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/topToolbarSub"
@@ -24,20 +24,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
-
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/logo_app" />
+                    android:src="@drawable/logo_app"/>
             </FrameLayout>
         </android.support.v7.widget.Toolbar>
 
         <View
+            android:background="@color/colorPrimaryDark"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorPrimaryDark" />
+            android:layout_height="2dp" />
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/linear"
@@ -54,8 +54,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="50dp"
+            android:gravity="bottom|center"
+            android:paddingBottom="50dp"
             android:text="내 주변의 동물 병원을\n찾아 보세요!"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="24sp"
@@ -195,7 +195,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/bottomLL"

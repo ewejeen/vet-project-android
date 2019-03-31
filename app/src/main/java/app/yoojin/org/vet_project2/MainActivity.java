@@ -3,18 +3,20 @@ package app.yoojin.org.vet_project2;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,11 +30,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar topToolbar;
+    android.support.v7.widget.Toolbar topToolbar;
     Spinner spinner;
     String selectItem, nowAddress, nowProvince, nowCity;
     FrameLayout locationL, frame;
@@ -149,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       // 지역 선택 스피너
+        // 지역 선택 스피너
         final Spinner proSpinner = findViewById(R.id.proSpinner);
         final Spinner citySpinner = findViewById(R.id.citySpinner);
         searchIcon2 = findViewById(R.id.searchIcon2);
@@ -272,23 +279,11 @@ public class MainActivity extends AppCompatActivity {
         searchIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VetListFragment vetListFragment = new VetListFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("province", choice_province);
-                bundle.putString("city", choice_city);
-
-                vetListFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
-                //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
-                fragmentTransaction.commit();
-
-                /*Intent intent = new Intent(context,VetListActivity.class);
+                Context context = v.getContext();
+                Intent intent = new Intent(context,VetListActivity.class);
                 intent.putExtra("province", choice_province);
                 intent.putExtra("city", choice_city);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 
@@ -300,21 +295,9 @@ public class MainActivity extends AppCompatActivity {
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VetListFragment vetListFragment = new VetListFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("searchKeyword", searchWord.getText().toString());
-
-                vetListFragment.setArguments(bundle);
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
-                //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
-                fragmentTransaction.commit();
-
-                /*Intent intent = new Intent(getApplicationContext(),VetListActivity.class);
+                Intent intent = new Intent(getApplicationContext(),VetListActivity.class);
                 intent.putExtra("searchKeyword", searchWord.getText().toString());
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 
@@ -329,29 +312,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent listIntent = new Intent(v.getContext(), VetListActivity.class);
                 if(gps.isGetLocation()) {
+                    listIntent.putExtra("lat",gps.getLatitude());
+                    listIntent.putExtra("lng",gps.getLongtitude());
                     nowProvince = getCurrentLocation()[1];
                     nowCity = getCurrentLocation()[2];
-
-                    VetListFragment vetListFragment = new VetListFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putDouble("lat", gps.getLatitude());
-                    bundle.putDouble("lng", gps.getLongtitude());
-                    bundle.putString("nowP", nowProvince);
-                    bundle.putString("nowC", nowCity);
-                    vetListFragment.setArguments(bundle);
-
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.linear ,vetListFragment); // 이 액티비티의 linear를 vetlistfragment 프래그먼트로 교체한다
-                    //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
-                    fragmentTransaction.commit();
-
-                    /*listIntent.putExtra("lat",gps.getLatitude());
-                    listIntent.putExtra("lng",gps.getLongtitude());
+                    // 현재 시도, 시군구로 검색
+                    Log.v("인텐트도",nowProvince);
+                    Log.v("인텐트시",nowCity);
                     listIntent.putExtra("nowP",nowProvince);
                     listIntent.putExtra("nowC",nowCity);
 
-                    startActivity(listIntent);*/
+                    startActivity(listIntent);
                 } else{
                     Toast.makeText(MainActivity.this, "위치 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -366,25 +337,21 @@ public class MainActivity extends AppCompatActivity {
     //onCreate 끝
 
 
-    // Bottom Navigatoin 리스너
+    // Bottom Navigation 리스너
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    return true;
+                /*case R.id.navigation_home:
+                    return true;*/
                 case R.id.navigation_findvet:
-                    Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, "병원을 검색해 주세요.", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigation_notice:
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.linear ,new NoticeFragment()); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체한다
-                    //fragmentTransaction.replace(R.id.linear, NoticeFragment.newInstance("파라미터1","파라미터2")); // 이 액티비티의 linear를 noticefragment 프래그먼트로 교체, param 넘긴다
-                    fragmentTransaction.commit();
+                    Intent intent2 = new Intent(MainActivity.this, NoticeActivity.class);
+                    startActivity(intent2);
+                    //startActivityForResult(intent2,101);
                     return true;
             }
             return false;
@@ -449,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(addressList!=null){
-                 // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
+                // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
                 String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
                 nowAddress = addressList.get(0).getAddressLine(0).substring(4);
                 nowProvince = adrs[1];

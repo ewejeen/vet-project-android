@@ -6,11 +6,10 @@
 
     <item
         android:id="@+id/app_bar_search"
-        android:icon="@drawable/ic_search_white_24dp"
-        android:iconTint="@color/colorWhite"
+        android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="always" />
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 
 
 
