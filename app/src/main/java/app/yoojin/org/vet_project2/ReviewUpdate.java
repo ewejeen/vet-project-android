@@ -1,8 +1,10 @@
 package app.yoojin.org.vet_project2;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -236,17 +238,31 @@ public class ReviewUpdate extends AppCompatActivity {
     } // 방문일 달력 끝
 
     private void updateReview(){
-        // 프로그레시브 바
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(ReviewUpdate.this);
-        progressDialog.setMessage("업로드 진행 중...");
-        progressDialog.show();
-
         Bundle intent = getIntent().getExtras();
         final int hpt_id = intent.getInt("hpt_id");
         double hpt_rate = Double.parseDouble(ratingRes.getText().toString());
         final String rv_title = title.getText().toString();
         String rv_content = content.getText().toString();
+
+        // 예외 처리
+        if(!(visit_is_new==0 || visit_is_new==1) || rv_title.isEmpty() || rv_title.equals("") || rv_content.isEmpty() || rv_content.equals("")){
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReviewUpdate.this);
+            alertDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();     //닫기
+                }
+            });
+            alertDialog.setMessage("방문 여부, 제목, 내용은 필수 항목입니다.");
+            alertDialog.show();
+            return;
+        }
+
+        // 프로그레시브 바
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ReviewUpdate.this);
+        progressDialog.setMessage("업로드 진행 중...");
+        progressDialog.show();
 
         MultipartBody.Part imageFile = null;
         // 이미지를 선택하지 않을 경우의 예외 처리
