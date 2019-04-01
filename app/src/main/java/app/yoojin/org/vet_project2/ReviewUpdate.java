@@ -73,7 +73,7 @@ public class ReviewUpdate extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         Bundle bundle = getIntent().getExtras();
@@ -264,7 +264,7 @@ public class ReviewUpdate extends AppCompatActivity {
         progressDialog.setMessage("업로드 진행 중...");
         progressDialog.show();
 
-        MultipartBody.Part imageFile = null;
+        MultipartBody.Part imageFile;
         // 이미지를 선택하지 않을 경우의 예외 처리
         if(imgPath!=null){
             File file = new File(imgPath);
@@ -354,7 +354,7 @@ public class ReviewUpdate extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.top_navigation, menu);
+        menuInflater.inflate(R.menu.top_navigation_plain, menu);
         return true;
     }
 
@@ -364,7 +364,7 @@ public class ReviewUpdate extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.app_bar_search:
                 return true;
-            case R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }

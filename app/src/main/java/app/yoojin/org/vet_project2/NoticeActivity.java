@@ -46,7 +46,7 @@ public class NoticeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initViews();    // 리사이클러뷰
@@ -76,7 +76,7 @@ public class NoticeActivity extends AppCompatActivity {
 
     // 리사이클러뷰
     private void initViews(){
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerNotice);
+        recyclerView = findViewById(R.id.recyclerNotice);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -154,7 +154,7 @@ public class NoticeActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.app_bar_search:
                 return true;
-            case R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }

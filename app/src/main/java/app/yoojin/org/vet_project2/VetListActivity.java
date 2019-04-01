@@ -55,7 +55,7 @@ public class VetListActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initViews();
@@ -104,7 +104,7 @@ public class VetListActivity extends AppCompatActivity{
 
     // 리사이클러뷰
     private void initViews(){
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        recyclerView = findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -339,7 +339,7 @@ public class VetListActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.app_bar_search:
                 return true;
-            case R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }

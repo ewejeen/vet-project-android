@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +30,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    android.support.v7.widget.Toolbar topToolbar;
-    Spinner spinner;
+    Toolbar topToolbar;
+    private Spinner spinner, proSpinner, citySpinner;
     String selectItem, nowAddress, nowProvince, nowCity;
     FrameLayout locationL, frame;
     LinearLayout nameL, myLocL;
@@ -77,10 +78,16 @@ public class MainActivity extends AppCompatActivity {
 
         // 검색기준(상호명or지역) 선택 스피너
         spinner = findViewById(R.id.spinner);
+        // 지역 선택 스피너
+        proSpinner = findViewById(R.id.proSpinner);
+        citySpinner = findViewById(R.id.citySpinner);
+
         nameL = findViewById(R.id.nameL);
         locationL = findViewById(R.id.locationL);
         myLocL = findViewById(R.id.myLocL);
         frame = findViewById(R.id.frame);
+
+        searchIcon2 = findViewById(R.id.searchIcon2);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -88,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 selectItem = parent.getItemAtPosition(position).toString(); //상호명 or 지역
                 if (selectItem.equals("내 위치로 검색")) {
                     index=0;
-                    // 수정 필요
                     if(index==0){
                         myLocL.setVisibility(View.VISIBLE);
                         nameL.setVisibility(View.INVISIBLE);
@@ -106,13 +112,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else if(selectItem.equals("상호명으로 검색")){
                     index=1;
-
                     if(index==0){
                         myLocL.setVisibility(View.VISIBLE);
                         nameL.setVisibility(View.INVISIBLE);
                         locationL.setVisibility(View.INVISIBLE);
-
-
                     } else if(index==1){
                         myLocL.setVisibility(View.INVISIBLE);
                         nameL.setVisibility(View.VISIBLE);
@@ -126,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }else if(selectItem.equals("지역으로 검색")){
                     index=2;
-
                     if(index==0){
                         myLocL.setVisibility(View.VISIBLE);
                         nameL.setVisibility(View.INVISIBLE);
@@ -148,11 +150,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        // 지역 선택 스피너
-        final Spinner proSpinner = findViewById(R.id.proSpinner);
-        final Spinner citySpinner = findViewById(R.id.citySpinner);
-        searchIcon2 = findViewById(R.id.searchIcon2);
 
         ad_province = ArrayAdapter.createFromResource(this,R.array.province, android.R.layout.simple_spinner_dropdown_item);
         ad_province.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

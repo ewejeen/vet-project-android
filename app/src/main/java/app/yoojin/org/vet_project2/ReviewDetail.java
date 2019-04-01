@@ -105,7 +105,7 @@ public class ReviewDetail extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
     }
@@ -142,7 +142,7 @@ public class ReviewDetail extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }
@@ -301,7 +301,7 @@ public class ReviewDetail extends AppCompatActivity {
 
     // 댓글 목록 리사이클러
     private void initRecycler(){
-        cmt_recycler = (RecyclerView) findViewById(R.id.cmt_recycler);
+        cmt_recycler = findViewById(R.id.cmt_recycler);
         cmt_recycler.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         cmt_recycler.setLayoutManager(layoutManager);

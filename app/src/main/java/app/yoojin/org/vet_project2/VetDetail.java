@@ -72,7 +72,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Bottom Navigation
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         name = findViewById(R.id.name);
@@ -221,7 +221,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
     // 리사이클러뷰
     private void initViews(){
-        recyclerView = (RecyclerView) findViewById(R.id.rv_recycler);
+        recyclerView = findViewById(R.id.rv_recycler);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -310,7 +310,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.home:
+            case android.R.id.home:
                 finish();
                 return true;
         }
