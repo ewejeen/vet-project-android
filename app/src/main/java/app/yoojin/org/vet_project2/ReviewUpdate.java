@@ -55,7 +55,7 @@ public class ReviewUpdate extends AppCompatActivity {
 
     private int mYear, mMonth, mDay;
     private int visit_is_new, rv_id;
-    private String strDate, pet_type, hpt_name, imgPath;
+    private String strDate, pet_type, hpt_name, imgPath, visit_date, rv_rate;
     private static final int DIALOG_DATE = 1;
     private final int REQ_CODE_SELECT_IMAGE = 1001;
 
@@ -77,14 +77,16 @@ public class ReviewUpdate extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         Bundle bundle = getIntent().getExtras();
-        hptName = findViewById(R.id.hpt);
         hpt_name = bundle.getString("hpt_name");
-        hptName.setText(hpt_name); // 방문 병원 이름 설정
         rv_id = bundle.getInt("rv_id");
+        visit_date = bundle.getString("visit_date");
+        rv_rate = bundle.getString("rv_rate");
 
+        hptName = findViewById(R.id.hpt);
+        hptName.setText(hpt_name); // 방문 병원 이름 설정
         // DatePicker
         date = findViewById(R.id.date);
-        String[] visit_date = bundle.getString("visit_date").split("-");
+        String[] visit_dateArr = visit_date.split("-");
 
         dateBtn = findViewById(R.id.dateBtn);
         dateBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,17 +97,17 @@ public class ReviewUpdate extends AppCompatActivity {
         });
 
         // 방문일 받아와서 설정
-        mYear = Integer.parseInt(visit_date[0]);
-        mMonth = Integer.parseInt(visit_date[1]);
-        mDay = Integer.parseInt(visit_date[2]);
+        mYear = Integer.parseInt(visit_dateArr[0]);
+        mMonth = Integer.parseInt(visit_dateArr[1]);
+        mDay = Integer.parseInt(visit_dateArr[2]);
         updateDate();
         // end of DatePicker
 
         // 별점 설정 및 변경
         ratingBar = findViewById(R.id.ratingBar3);
         ratingRes = findViewById(R.id.ratingRes);
-        ratingRes.setText(bundle.getString("rv_rate"));
-        ratingBar.setRating(Float.parseFloat(bundle.getString("rv_rate")));
+        ratingRes.setText(rv_rate);
+        ratingBar.setRating(Float.parseFloat(rv_rate));
 
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override

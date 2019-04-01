@@ -49,11 +49,9 @@ public class ReviewDataAdapterThree extends RecyclerView.Adapter {
                 intent.putExtra("hpt_name",bundle.getString("hpt_name"));
                 intent.putExtra("rv_id",String.format("%d", list.get(position).getRv_id()));
 
-                v.getContext().startActivity(intent);
+                context.startActivity(intent);
             }
         });
-
-
     }
 
     @Override
@@ -75,5 +73,4 @@ public class ReviewDataAdapterThree extends RecyclerView.Adapter {
             rvcon = view.findViewById(R.id.rvcon);
         }
     }
-
 }

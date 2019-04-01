@@ -95,11 +95,6 @@ public class ReviewList extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    Intent intent = new Intent(ReviewList.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                    return true;
                 case R.id.navigation_findvet:
                     return true;
                 case R.id.navigation_notice:

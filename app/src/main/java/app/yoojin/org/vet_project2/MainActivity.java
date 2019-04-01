@@ -30,15 +30,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar topToolbar;
+    private Toolbar topToolbar;
     private Spinner spinner, proSpinner, citySpinner;
-    String selectItem, nowAddress, nowProvince, nowCity;
-    FrameLayout locationL, frame;
-    LinearLayout nameL, myLocL;
-    Button searchIcon, searchIcon2, getGpsBtn;
-    TextView myGps;
-    EditText searchWord;
-    int index = 0;
+    private String selectItem, nowAddress;
+    private FrameLayout locationL, frame;
+    private LinearLayout nameL, myLocL;
+    private Button searchIcon, searchIcon2, getGpsBtn;
+    private TextView myGps;
+    private EditText searchWord;
+    private int index = 0;
 
     public static Context mContext;
 
@@ -88,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
         frame = findViewById(R.id.frame);
 
         searchIcon2 = findViewById(R.id.searchIcon2);
+
+        // 상호명으로 검색
+        searchIcon = findViewById(R.id.searchIcon);
+        searchWord = findViewById(R.id.searchWord);
+
+        // GPS 정보 보여주기 위함
+        getGpsBtn = findViewById(R.id.getGpsBtn);
+        myGps = findViewById(R.id.myGps);
+
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -160,93 +169,59 @@ public class MainActivity extends AppCompatActivity {
                 if(ad_province.getItem(position).equals("서울특별시")){
                     choice_province="서울특별시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_seoul, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("경기도")){
                     choice_province="경기도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_gyeonggi, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("강원도")){
                     choice_province="강원도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_gangwon, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("경상남도")){
                     choice_province="경상남도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_gyeongnam, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("경상북도")){
                     choice_province="경상북도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_gyeongbuk, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("전라남도")){
                     choice_province="전라남도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_jeonnam, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("전라북도")){
                     choice_province="전라북도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_jeonbuk, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("충청남도")){
                     choice_province="충청남도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_chungnam, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("충청북도")){
                     choice_province="충청북도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_chungbuk, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("부산광역시")){
                     choice_province="부산광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_busan, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("대전광역시")){
                     choice_province="대전광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_daejeon, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("대구광역시")){
                     choice_province="대구광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_daegu, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("인천광역시")){
                     choice_province="인천광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_incheon, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("울산광역시")){
                     choice_province="울산광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_ulsan, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("제주특별자치도")){
                     choice_province="제주특별자치도";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_jeju, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("세종특별자치시")){
                     choice_province="세종특별자치시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_sejong, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else if(ad_province.getItem(position).equals("광주광역시")){
                     choice_province="광주광역시";
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this, R.array.city_gwangju, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 } else{
                     ad_city = ArrayAdapter.createFromResource(MainActivity.this,R.array.city, android.R.layout.simple_spinner_dropdown_item);
-                    ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    citySpinner.setAdapter(ad_city);
                 }
+                ad_city.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                citySpinner.setAdapter(ad_city);
 
                 citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -277,10 +252,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 상호명으로 검색
-        searchIcon = findViewById(R.id.searchIcon);
-        searchWord = findViewById(R.id.searchWord);
-
         // 상호명 입력 완료하고 검색 버튼 눌렀을 시 리스너
         searchIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,10 +262,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // GPS 정보 보여주기 위함
-        getGpsBtn = findViewById(R.id.getGpsBtn);
-        myGps = findViewById(R.id.myGps);
-
+        // GPS
         gps = new GPSInfo(MainActivity.this);
 
         getGpsBtn.setOnClickListener(new View.OnClickListener() {
@@ -304,13 +272,9 @@ public class MainActivity extends AppCompatActivity {
                 if(gps.isGetLocation()) {
                     listIntent.putExtra("lat",gps.getLatitude());
                     listIntent.putExtra("lng",gps.getLongtitude());
-                    nowProvince = getCurrentLocation()[1];
-                    nowCity = getCurrentLocation()[2];
                     // 현재 시도, 시군구로 검색
-                    Log.v("인텐트도",nowProvince);
-                    Log.v("인텐트시",nowCity);
-                    listIntent.putExtra("nowP",nowProvince);
-                    listIntent.putExtra("nowC",nowCity);
+                    listIntent.putExtra("nowP",getCurrentLocation()[1]);
+                    listIntent.putExtra("nowC",getCurrentLocation()[2]);
 
                     startActivity(listIntent);
                 } else{
@@ -406,14 +370,10 @@ public class MainActivity extends AppCompatActivity {
             if(addressList!=null){
                 // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
                 String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
-                nowAddress = addressList.get(0).getAddressLine(0).substring(4);
-                nowProvince = adrs[1];
-                nowCity = adrs[2];
-                Log.v("시도",nowProvince);
-                Log.v("시군구",nowCity);
+                nowAddress = addressList.get(0).getAddressLine(0).substring(4); // 국가명 잘라내기
 
                 myGps.setText("내 위치: "+nowAddress);
-                result = new String[]{nowAddress, nowProvince, nowCity};
+                result = new String[]{nowAddress, adrs[1], adrs[2]};
             }
 
         } else{

@@ -82,16 +82,6 @@ public class ReviewDataAdapter extends RecyclerView.Adapter {
                     intent.putExtra("hpt_id",list.get(position).getHpt_id());
                     intent.putExtra("hpt_name",bundle.getString("hpt_name"));
                     intent.putExtra("rv_id",String.format("%d", list.get(position).getRv_id()));
-
-                    /*intent.putExtra("review_cnt",list.get(position).getReviewCnt());
-                    intent.putExtra("ratingAvg",list.get(position).getRateAvg());
-
-                    // 상세페이지에만 들어가는 정보들
-                    intent.putExtra("adrs_new", list.get(position).getAdrsNew());
-                    intent.putExtra("adrs_old", list.get(position).getAdrsOld());
-                    intent.putExtra("address", list.get(position).getAddress());
-                    intent.putExtra("hpt_phone", list.get(position).getHptPhone());
-                    intent.putExtra("hpt_hit",list.get(position).getHptHit());*/
                     v.getContext().startActivity(intent);
                 }
             });

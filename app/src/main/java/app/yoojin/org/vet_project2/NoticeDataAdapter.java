@@ -42,8 +42,6 @@ public class NoticeDataAdapter extends RecyclerView.Adapter {
         itemHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
-
                 Intent intent = new Intent(v.getContext(),NoticeDetail.class);
                 intent.putExtra("id",list.get(position).getId());
                 intent.putExtra("title",list.get(position).getTitle());

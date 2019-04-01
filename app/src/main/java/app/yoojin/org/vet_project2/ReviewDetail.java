@@ -69,6 +69,9 @@ public class ReviewDetail extends AppCompatActivity {
         deleteBtn = findViewById(R.id.button5);
         updateBtn = findViewById(R.id.button3);
 
+        cmtCon = findViewById(R.id.cmtCon);
+        cmtReg = findViewById(R.id.cmtReg);
+
         // 댓글 등록 완료 시 키보드 숨기기
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -77,7 +80,6 @@ public class ReviewDetail extends AppCompatActivity {
         rv_id = Integer.parseInt(intent.getString("rv_id"));
         hpt_nameT = intent.getString("hpt_name");
         hpt_id = intent.getInt("hpt_id");
-        Log.d("병원 id",""+hpt_id);
 
         hpt_name.setText(hpt_nameT);
 
@@ -91,8 +93,6 @@ public class ReviewDetail extends AppCompatActivity {
         // 댓글 목록 불러오기
         initRecycler();
 
-        cmtCon = findViewById(R.id.cmtCon);
-        cmtReg = findViewById(R.id.cmtReg);
         // 댓글 등록 기능
         cmtReg.setOnClickListener(cmtRegFn);
 
