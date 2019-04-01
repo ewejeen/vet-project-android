@@ -23,7 +23,6 @@ import java.util.List;
 public class VetDataAdapter extends RecyclerView.Adapter {
     private List<VetVO> list;
     private ArrayList<VetVO> listFiltered;
-    private SortedList<VetVO> listSorted;
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
 
@@ -177,6 +176,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
     // 결과 내 검색 필터
     public void filter(String query){
         query = query.toLowerCase();
+        Log.d("q",query);
         list.clear();
         if(query.length()==0){
             list.addAll(listFiltered);

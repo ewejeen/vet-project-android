@@ -184,14 +184,14 @@ public class ReviewUpdate extends AppCompatActivity {
         });
         // 라디오 버튼 값 가져오기 끝
 
-        // 이미지 uri 받아오기
+        /*// 이미지 uri 받아오기
         imgPath = bundle.getString("imageUri");
         Log.d("uri",imgPath);
         imageView = findViewById(R.id.upImageView2);
         Glide.with(this)
                 .load(imgPath)
                 .error(R.drawable.no_image)
-                .into(imageView);
+                .into(imageView);*/
 
         // 이미지 선택 버튼
         pickImg = findViewById(R.id.button4);
@@ -249,12 +249,16 @@ public class ReviewUpdate extends AppCompatActivity {
         String rv_content = content.getText().toString();
 
         MultipartBody.Part imageFile = null;
-        Log.d("패스",imgPath);
-        // 이미지를 선택하지 않을 경우의 예외 처리 필요
+        // 이미지를 선택하지 않을 경우의 예외 처리
+        if(imgPath!=null){
+            File file = new File(imgPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
+        } else{
+            RequestBody requestBody = RequestBody.create(MultipartBody.FORM,"");
+            imageFile = MultipartBody.Part.createFormData("imageFile", "", requestBody);
+        }
 
-        File file = new File(imgPath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
 
         RequestBody dateBody = RequestBody.create(MediaType.parse("text/plain"),strDate);
         RequestBody petBody = RequestBody.create(MediaType.parse("text/plain"),pet_type);

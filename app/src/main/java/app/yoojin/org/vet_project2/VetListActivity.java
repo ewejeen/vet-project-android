@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,9 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,12 +88,10 @@ public class VetListActivity extends AppCompatActivity{
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_findvet:
                     Intent intent = new Intent(VetListActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                    return true;
-                case R.id.navigation_findvet:
                     return true;
                 case R.id.navigation_notice:
                     Intent intent2 = new Intent(VetListActivity.this, NoticeActivity.class);
@@ -301,9 +298,6 @@ public class VetListActivity extends AppCompatActivity{
         }
     };
 
-    /*SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_layout);
-        swipeRefreshLayout.setOnRefreshListener(swipeListener);*/
-
     // Top Navigation에 top_navigation.xml을 집어넣는다 + 서치뷰 검색
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -330,7 +324,6 @@ public class VetListActivity extends AppCompatActivity{
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    //adapter.getFilter().filter(query);
                     adapter.filter(query);
                     return false;
                 }

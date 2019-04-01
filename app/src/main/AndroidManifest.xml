@@ -6,11 +6,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 위치정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- 전화와 메시지를 보내기 위한 퍼미션 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.DIAL_PHONE" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -52,7 +51,9 @@
         <activity android:name=".ReviewDetail" />
         <activity android:name=".ReviewWrite" />
         <activity android:name=".ReviewUpdate" />
-        <activity android:name=".NoticeDetail"></activity>
+        <activity android:name=".NoticeDetail" />
+        <activity android:name=".SplashActivity"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

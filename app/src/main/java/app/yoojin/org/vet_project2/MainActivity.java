@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 앱 시작 화면
+        Intent splashIntent = new Intent(this, SplashActivity.class);
+        startActivity(splashIntent);
+
         mContext = this;
 
         // Top Navigation
@@ -332,9 +336,7 @@ public class MainActivity extends AppCompatActivity {
         callPermission(); // 권한 요청
         getCurrentLocation();
         // GPS 끝
-
-    }
-    //onCreate 끝
+    } //onCreate 끝
 
 
     // Bottom Navigation 리스너

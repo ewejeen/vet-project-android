@@ -1,5 +1,6 @@
 package app.yoojin.org.vet_project2;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,6 +46,7 @@ public class ReviewDetail extends AppCompatActivity {
     private RecyclerView cmt_recycler;
     private List<ReviewVO> data;
     private ReviewCommentAdapter adapter;
+    private InputMethodManager inputMethodManager;  // 키보드 숨기기
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,9 @@ public class ReviewDetail extends AppCompatActivity {
 
         deleteBtn = findViewById(R.id.button5);
         updateBtn = findViewById(R.id.button3);
+
+        // 댓글 등록 완료 시 키보드 숨기기
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // ReviewWrite, ReviewList에서 받아온 인텐트 정보들
         Bundle intent = getIntent().getExtras();
@@ -277,7 +283,9 @@ public class ReviewDetail extends AppCompatActivity {
                         Log.d("댓글 등록 레트로핏 에러", t.getMessage());
                     }
                 });
-
+                // 등록 누를 시 키보드 내려가게 하고 editText 내용 지우기
+                inputMethodManager.hideSoftInputFromWindow(cmtCon.getWindowToken(),0);
+                cmtCon.setText("");
             } else{
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReviewDetail.this);
                 alertDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {

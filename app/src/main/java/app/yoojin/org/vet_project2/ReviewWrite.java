@@ -40,6 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.http.Multipart;
 
 public class ReviewWrite extends AppCompatActivity {
 
@@ -233,12 +234,16 @@ public class ReviewWrite extends AppCompatActivity {
         String rv_content = content.getText().toString();
 
         MultipartBody.Part imageFile = null;
-        Log.d("패스",imgPath);
-        // 이미지를 선택하지 않을 경우의 예외 처리
 
-        File file = new File(imgPath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
+        // 이미지를 선택하지 않을 경우의 예외 처리
+        if(imgPath!=null){
+            File file = new File(imgPath);
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            imageFile = MultipartBody.Part.createFormData("imageFile", file.getName(), requestBody);
+        } else{
+            RequestBody requestBody = RequestBody.create(MultipartBody.FORM,"");
+            imageFile = MultipartBody.Part.createFormData("imageFile", "", requestBody);
+        }
 
         RequestBody dateBody = RequestBody.create(MediaType.parse("text/plain"),strDate);
         RequestBody petBody = RequestBody.create(MediaType.parse("text/plain"),pet_type);

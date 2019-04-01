@@ -62,16 +62,10 @@ public class NoticeActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.navigation_findvet:
                     Intent intent = new Intent(NoticeActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     startActivity(intent);
-                    finish();
-                    return true;
-                case R.id.navigation_findvet:
-                    Intent intent2 = new Intent(NoticeActivity.this, ReviewList.class);
-                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    startActivity(intent2);
                     return true;
                 case R.id.navigation_notice:
                     return true;
@@ -166,7 +160,4 @@ public class NoticeActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
