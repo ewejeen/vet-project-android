@@ -78,11 +78,11 @@ public class NoticeDetail extends AppCompatActivity {
         }
     };
 
-    // Top Navigation에 top_navigation.xml을 집어넣는다
+    // Top Navigation을 집어넣는다
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.top_navigation, menu);
+        menuInflater.inflate(R.menu.top_navigation_plain, menu);
         return true;
     }
 
@@ -90,8 +90,6 @@ public class NoticeDetail extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.app_bar_search:
-                return true;
             case R.id.home:
                 finish();
                 return true;
