@@ -70,6 +70,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
         if(holder instanceof ItemViewHolder){ // viewType == item
             final ItemViewHolder itemHolder = (ItemViewHolder) holder;
             itemHolder.hpt_name.setText(list.get(position).getHpt_name());
+            itemHolder.hpt_name.setSelected(true);  // 상호명이 길어도 한 줄에 표시하고 자동으로 흐르게 하기 위함
             itemHolder.adrs.setText(list.get(position).getAddress());
             itemHolder.review_cnt.setText(list.get(position).getReviewCnt());
             float rating = Float.valueOf(list.get(position).getRateAvg());
