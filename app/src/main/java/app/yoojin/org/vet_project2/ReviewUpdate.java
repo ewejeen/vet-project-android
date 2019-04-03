@@ -244,10 +244,12 @@ public class ReviewUpdate extends AppCompatActivity {
         final int hpt_id = intent.getInt("hpt_id");
         double hpt_rate = Double.parseDouble(ratingRes.getText().toString());
         final String rv_title = title.getText().toString();
+        String titleTrim = rv_title.replace(" ","");
         String rv_content = content.getText().toString();
+        String contentTrim = rv_content.replace(" ","");
 
         // 예외 처리
-        if(!(visit_is_new==0 || visit_is_new==1) || rv_title.isEmpty() || rv_title.equals("") || rv_content.isEmpty() || rv_content.equals("")){
+        if(!(visit_is_new==0 || visit_is_new==1) || titleTrim.isEmpty() || titleTrim.equals("") || contentTrim.isEmpty() || contentTrim.equals("")){
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReviewUpdate.this);
             alertDialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
