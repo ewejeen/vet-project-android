@@ -240,6 +240,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // GPS
+        gps = new GPSInfo(MainActivity.this);
+
         // 지역 선택 완료하고 검색 버튼 눌렀을 시 리스너
         searchIcon2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(context,VetListActivity.class);
                 intent.putExtra("province", choice_province);
                 intent.putExtra("city", choice_city);
+                intent.putExtra("lat",gps.getLatitude());
+                intent.putExtra("lng",gps.getLongtitude());
                 startActivity(intent);
             }
         });
@@ -258,13 +263,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),VetListActivity.class);
                 intent.putExtra("searchKeyword", searchWord.getText().toString());
+                intent.putExtra("lat",gps.getLatitude());
+                intent.putExtra("lng",gps.getLongtitude());
                 startActivity(intent);
             }
         });
 
-        // GPS
-        gps = new GPSInfo(MainActivity.this);
-
+        // 내 주변 병원 찾기 버튼 눌렀을 시 리스너
         getGpsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -354,14 +359,14 @@ public class MainActivity extends AppCompatActivity {
         // GPS 사용 유무 가져오기
         if(gps.isGetLocation()){
             double latitude = gps.getLatitude();
-            double longtitude = gps.getLongtitude();
+            double longitude = gps.getLongtitude();
 
             //Geocoder (위도경도 -> 주소)
             Geocoder geocoder = new Geocoder(this);
             List<Address> addressList = null;
 
             try{
-                addressList = geocoder.getFromLocation(latitude, longtitude, 1);
+                addressList = geocoder.getFromLocation(latitude, longitude, 1);
             } catch (IOException e){
                 e.printStackTrace();
                 Log.e("test","입출력 오류");

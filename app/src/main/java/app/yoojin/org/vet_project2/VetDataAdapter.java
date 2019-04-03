@@ -79,9 +79,9 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             itemHolder.hitCnt.setText(String.format("%d",list.get(position).getHpt_hit()));
 
             // 거리 정보 존재하면 distance 텍스트뷰에 표시
-            Double distanceVal = Math.round(list.get(position).getDistance() * 100) / 100.0;
-            Double distanceValM = (Math.round(list.get(position).getDistance() * 1000) / 1000.0) * 1000;
-            if(distanceVal != 0){
+            if(list.get(position).getDistance() != 0){
+                Double distanceVal = Math.round(list.get(position).getDistance() * 100) / 100.0;
+                Double distanceValM = (Math.round(list.get(position).getDistance() * 1000) / 1000.0) * 1000;
                 if(distanceVal < 1){    // 1km 미만이면 m로 표시
                     itemHolder.distance.setText(String.format("%d", distanceValM.intValue()) + "m");
                 } else{

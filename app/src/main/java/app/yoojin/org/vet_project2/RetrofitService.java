@@ -25,12 +25,13 @@ public interface RetrofitService {
 
     @GET("/vetproject_v2/vetSearchByName.do")
     Call<List<VetVO>> vetGetByName(
-            @Query("searchKeyword") String searchKeyword
+            //@Query("searchKeyword") String searchKeyword
+            @QueryMap HashMap<String, Object> name
     );
 
     @GET("/vetproject_v2/vetSearchByRegion.do")
     Call<List<VetVO>> vetGetByRegion(
-            @QueryMap HashMap<String, String> region
+            @QueryMap HashMap<String, Object> region
     );
 
     @GET("/vetproject_v2/vetSearchNearest.do")
