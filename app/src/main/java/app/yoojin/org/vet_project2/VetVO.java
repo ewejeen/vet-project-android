@@ -35,6 +35,9 @@ public class VetVO {
     @SerializedName("reviewCnt")
     private String reviewCnt;
 
+    @SerializedName(("distance"))
+    private Double distance;
+
     public String getAddress() {
         return address;
     }
@@ -145,5 +148,13 @@ public class VetVO {
 
     public void setReviewCnt(String reviewCnt) {
         this.reviewCnt = reviewCnt;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 }

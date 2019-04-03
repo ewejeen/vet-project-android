@@ -33,6 +33,11 @@ public interface RetrofitService {
             @QueryMap HashMap<String, String> region
     );
 
+    @GET("/vetproject_v2/vetSearchNearest.do")
+    Call<List<VetVO>> vetGetByDistance(
+            @QueryMap HashMap<String, Double> axis
+    );
+
     @GET("/vetproject_v2/vetDetail.do")
     Call<List<VetVO>> vetDetail(
             @Query("hpt_id") int hpt_id

@@ -1,8 +1,10 @@
 package app.yoojin.org.vet_project2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Rating;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +78,17 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             itemHolder.rating.setText(ratingRound);
             itemHolder.hitCnt.setText(String.format("%d",list.get(position).getHpt_hit()));
 
+            // 거리 정보 존재하면 distance 텍스트뷰에 표시
+            Double distanceVal = Math.round(list.get(position).getDistance() * 100) / 100.0;
+            Double distanceValM = (Math.round(list.get(position).getDistance() * 1000) / 1000.0) * 1000;
+            if(distanceVal != 0){
+                if(distanceVal < 1){    // 1km 미만이면 m로 표시
+                    itemHolder.distance.setText(String.format("%d", distanceValM.intValue()) + "m");
+                } else{
+                    itemHolder.distance.setText(String.format("%.2f", distanceVal)+"km");
+                }
+            }
+
             final int hpt_id = list.get(position).getHpt_id();
             final String hpt_name = list.get(position).getHpt_name();
 
@@ -111,7 +124,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
 
     // 기본 아이템 뷰홀더
     public class ItemViewHolder extends  RecyclerView.ViewHolder{
-        private TextView hpt_name, adrs, review_cnt, rating, hitCnt;
+        private TextView hpt_name, adrs, review_cnt, rating, hitCnt, distance;
         private RatingBar ratingBar;
 
         public ItemViewHolder(View view){
@@ -122,6 +135,7 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             ratingBar = view.findViewById(R.id.ratingBar);
             rating = view.findViewById(R.id.rating);
             hitCnt = view.findViewById(R.id.hitCnt);
+            distance = view.findViewById(R.id.distance);
         }
     }
 

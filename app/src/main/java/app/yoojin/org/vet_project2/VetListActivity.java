@@ -69,8 +69,8 @@ public class VetListActivity extends AppCompatActivity{
         if(intent.getString("searchKeyword")!=null){
             textView.setText("'"+intent.getString("searchKeyword")+"'");
         } else if(intent.getDouble("lat") != 0 && intent.getDouble("lng") != 0){
-            //textView.setText("가까운 동물 병원");
-            textView.setText("'"+intent.getString("nowP") +" "+ intent.getString("nowC")+"'");
+            textView.setText("가까운 동물 병원");
+            //textView.setText("'"+intent.getString("nowP") +" "+ intent.getString("nowC")+"'");
         }
         else{
             textView.setText("'"+intent.getString("province") +" "+ intent.getString("city")+"'");
@@ -184,19 +184,18 @@ public class VetListActivity extends AppCompatActivity{
         });
     }
 
-    // 가까운 병원 검색 - 현재 시도, 시군구로 검색하는 걸로 임시
+    // 내 GPS 기준 가까운 병원 30개 검색
     private void searchNearest(){
         Bundle intent = getIntent().getExtras();
 
-        String province = intent.getString("nowP");
-        String city = intent.getString("nowC");
-        Log.v("도",province);
-        Log.v("시",city);
-        HashMap<String, String> region = new HashMap<>();
-        region.put("province", province);
-        region.put("city", city);
+        Double latitude = intent.getDouble("lat");
+        Double longitude = intent.getDouble("lng");
 
-        Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByRegion(region);
+        HashMap<String, Double> axis = new HashMap<>();
+        axis.put("latitude", latitude);
+        axis.put("longitude", longitude);
+
+        Call<List<VetVO>> call = RetrofitInit.getInstance().getService().vetGetByDistance(axis);
         call.enqueue(new Callback<List<VetVO>>() {
             @Override
             public void onResponse(Call<List<VetVO>> call, final Response<List<VetVO>> response) {

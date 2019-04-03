@@ -50,6 +50,25 @@
                 android:layout_marginLeft="5dp"
                 android:text="평점"
                 android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/rating2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:text="|"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:text="0.0km"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <TextView
