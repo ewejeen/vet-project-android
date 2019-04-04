@@ -114,39 +114,6 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
 
-        // 구글 지도 스크롤 막기
-        //scrollView = findViewById(R.id.scrollView);
-        //transparent = findViewById(R.id.imagetrans);
-        /*transparent.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Toast.makeText(VetDetail.this, "onTouch", Toast.LENGTH_SHORT).show();
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Disallow ScrollView to intercept touch events.
-                        Toast.makeText(VetDetail.this, "ACTION_DOWN", Toast.LENGTH_SHORT).show();
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        // Disable touch on transparent view
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        // Allow ScrollView to intercept touch events.
-                        Toast.makeText(VetDetail.this, "ACTION_UP", Toast.LENGTH_SHORT).show();
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Toast.makeText(VetDetail.this, "ACTION_MOVE", Toast.LENGTH_SHORT).show();
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        break;
-
-                }
-                VetDetail.super.onTouchEvent(event);
-                return true;
-            }
-        });*/
-
-        // 구글 지도 스크롤 막기 끝
-
         initViews();
     } // end of onCreate()
 
