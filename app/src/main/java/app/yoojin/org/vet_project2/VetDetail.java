@@ -18,9 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +49,6 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
 
     // 구글 지도 스크롤 막기
     private MapFragment mapFragment;
-    private ImageView transparent;
-    private ScrollView scrollView;
 
     private String hpt_name, hpt_phone, address, distanceVal;
     private int hpt_id, hpt_hit;
@@ -84,6 +80,8 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         phone = findViewById(R.id.phone);
         hit = findViewById(R.id.hit);
         distance = findViewById(R.id.distance);
+
+        name.setSelected(true); // 이름 너무 길면 흐르게
 
         Bundle intent = getIntent().getExtras();
         hpt_id = intent.getInt("hpt_id");
@@ -117,8 +115,8 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         });
 
         // 구글 지도 스크롤 막기
-        scrollView = findViewById(R.id.scrollView);
-        transparent = findViewById(R.id.imagetrans);
+        //scrollView = findViewById(R.id.scrollView);
+        //transparent = findViewById(R.id.imagetrans);
         /*transparent.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
