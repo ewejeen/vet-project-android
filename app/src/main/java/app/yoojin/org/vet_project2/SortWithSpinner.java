@@ -63,4 +63,12 @@ public class SortWithSpinner {
             //return Integer.compare(Integer.parseInt(arg0.getReviewCnt()), Integer.parseInt(arg1.getReviewCnt()));
         }
     }
+
+    // 가까운 순
+    static class DistanceCompare implements Comparator<VetVO> {
+        @Override
+        public int compare(VetVO arg0, VetVO arg1) {
+            return arg0.getDistance() < arg1.getDistance() ? -1 : arg0.getDistance() > arg1.getDistance() ? 1 : 0;
+        }
+    }
 }

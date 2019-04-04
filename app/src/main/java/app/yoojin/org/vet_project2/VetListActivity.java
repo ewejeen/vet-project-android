@@ -227,58 +227,55 @@ public class VetListActivity extends AppCompatActivity{
     AdapterView.OnItemSelectedListener spinnerListener = new AdapterView.OnItemSelectedListener(){
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            selectItem = parent.getItemAtPosition(position).toString(); //상호명 or 지역
-            Log.d("선택",selectItem);
+            selectItem = parent.getItemAtPosition(position).toString(); // 정렬 기준
             switch (selectItem){
                 case "상호명 오름차순":
-                    Log.d("상호명","오름차순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.NameAscCompare nasc = new SortWithSpinner.NameAscCompare();
                     nasc.compare(data.get(0), data.get(1));
                     Collections.sort(data, nasc);
                     break;
                 case "상호명 내림차순":
-                    Log.d("상호명","내림차순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.NameDescCompare ndesc = new SortWithSpinner.NameDescCompare();
                     ndesc.compare(data.get(0), data.get(1));
                     Collections.sort(data, ndesc);
                     break;
                 case "지역명 오름차순":
-                    Log.d("지역명","오름차순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.RegionAscCompare rasc = new SortWithSpinner.RegionAscCompare();
                     rasc.compare(data.get(0), data.get(1));
                     Collections.sort(data, rasc);
                     break;
                 case "지역명 내림차순":
-                    Log.d("지역명","내림차순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.RegionDescCompare rdesc = new SortWithSpinner.RegionDescCompare();
                     rdesc.compare(data.get(0), data.get(1));
                     Collections.sort(data, rdesc);
                     break;
                 case "평점 높은 순":
-                    Log.d("평점","높은 순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.RateCompare rate = new SortWithSpinner.RateCompare();
                     rate.compare(data.get(0), data.get(1));
                     Collections.sort(data, rate);
                     break;
                 case "후기 많은 순":
-                    Log.d("후기","많은 순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.ReviewCompare review = new SortWithSpinner.ReviewCompare();
                     review.compare(data.get(0), data.get(1));
                     Collections.sort(data, review);
                     break;
                 case "조회 많은 순":
-                    Log.d("조회","많은 순");
                     adapter.notifyDataSetChanged();
                     SortWithSpinner.ViewCompare viewCompare = new SortWithSpinner.ViewCompare();
                     viewCompare.compare(data.get(0), data.get(1));
                     Collections.sort(data, viewCompare);
                     break;
+                case "가까운 순":
+                    adapter.notifyDataSetChanged();
+                    SortWithSpinner.DistanceCompare distanceCompare = new SortWithSpinner.DistanceCompare();
+                    distanceCompare.compare(data.get(0), data.get(1));
+                    Collections.sort(data, distanceCompare);
             }
         }
 
