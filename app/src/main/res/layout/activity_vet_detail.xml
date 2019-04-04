@@ -69,7 +69,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -102,6 +101,16 @@
                     android:gravity="right"
                     android:text="N" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="15dp"
+                android:text="TextView"
+                android:textColor="#aaa"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"

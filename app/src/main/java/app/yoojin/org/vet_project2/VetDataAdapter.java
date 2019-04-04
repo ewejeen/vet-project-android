@@ -79,15 +79,13 @@ public class VetDataAdapter extends RecyclerView.Adapter {
             itemHolder.rating.setText(ratingRound);
             itemHolder.hitCnt.setText(String.format("%d",list.get(position).getHpt_hit()));
 
-            // 거리 정보 존재하면 distance 텍스트뷰에 표시
-            if(list.get(position).getDistance() != 0){
-                Double distanceVal = Math.round(list.get(position).getDistance() * 100) / 100.0;
-                Double distanceValM = (Math.round(list.get(position).getDistance() * 1000) / 1000.0) * 1000;
-                if(distanceVal < 1){    // 1km 미만이면 m로 표시
-                    itemHolder.distance.setText(String.format("%d", distanceValM.intValue()) + "m");
-                } else{
-                    itemHolder.distance.setText(String.format("%.2f", distanceVal)+"km");
-                }
+            // 거리 정보 distance 텍스트뷰에 표시
+            final Double distanceVal = Math.round(list.get(position).getDistance() * 100) / 100.0;
+            final Double distanceValM = (Math.round(list.get(position).getDistance() * 1000) / 1000.0) * 1000;
+            if(distanceVal < 1){    // 1km 미만이면 m로 표시
+                itemHolder.distance.setText(String.format("%d", distanceValM.intValue()) + "m");
+            } else{
+                itemHolder.distance.setText(String.format("%.2f", distanceVal)+"km");
             }
 
             final int hpt_id = list.get(position).getHpt_id();
@@ -102,6 +100,11 @@ public class VetDataAdapter extends RecyclerView.Adapter {
                     intent.putExtra("hpt_name",list.get(position).getHpt_name());
                     intent.putExtra("address", list.get(position).getAddress());
                     intent.putExtra("hpt_phone", list.get(position).getHpt_phone());
+                    if(distanceVal < 1){    // 1km 미만이면 m로 표시
+                        intent.putExtra("distance", String.format("%d", distanceValM.intValue()) + "m");
+                    } else{
+                        intent.putExtra("distance", String.format("%.2f", distanceVal)+"km");
+                    }
                     v.getContext().startActivity(intent);
                 }
             });

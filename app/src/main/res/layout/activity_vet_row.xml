@@ -61,6 +61,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="|"
+                android:textColor="#bbb"
                 android:textSize="12sp" />
 
             <TextView

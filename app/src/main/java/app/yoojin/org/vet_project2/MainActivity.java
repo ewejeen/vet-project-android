@@ -367,18 +367,19 @@ public class MainActivity extends AppCompatActivity {
 
             try{
                 addressList = geocoder.getFromLocation(latitude, longitude, 1);
+
+                if(addressList!=null){
+                    // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
+                    String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
+                    nowAddress = addressList.get(0).getAddressLine(0).substring(4); // 국가명 잘라내기
+
+                    myGps.setText("내 위치: "+nowAddress);
+                    result = new String[]{nowAddress, adrs[1], adrs[2]};
+                }
             } catch (IOException e){
                 e.printStackTrace();
-                Log.e("test","입출력 오류");
-            }
-
-            if(addressList!=null){
-                // 변환된 주소 확인 + 주소 파싱 + 텍스트뷰에 적용
-                String[] adrs = addressList.get(0).getAddressLine(0).split(" ");
-                nowAddress = addressList.get(0).getAddressLine(0).substring(4); // 국가명 잘라내기
-
-                myGps.setText("내 위치: "+nowAddress);
-                result = new String[]{nowAddress, adrs[1], adrs[2]};
+            } catch (ArrayIndexOutOfBoundsException e){
+                e.printStackTrace();
             }
 
         } else{

@@ -43,7 +43,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     private List<ReviewVO> data;
     private ReviewDataAdapterThree adapter;
     private Toolbar topToolbar;
-    private TextView name, newAdd, oldAdd, phone, hit, rvcnt, rateavg;
+    private TextView name, newAdd, oldAdd, phone, hit, rvcnt, rateavg, distance;
     private RatingBar ratingBar2;
     private Geocoder geocoder;
     private RecyclerView recyclerView;
@@ -54,7 +54,7 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
     private ImageView transparent;
     private ScrollView scrollView;
 
-    private String hpt_name, hpt_phone, address;
+    private String hpt_name, hpt_phone, address, distanceVal;
     private int hpt_id, hpt_hit;
     private float rating;
 
@@ -83,12 +83,16 @@ public class VetDetail extends AppCompatActivity implements OnMapReadyCallback {
         oldAdd = findViewById(R.id.oldAdd);
         phone = findViewById(R.id.phone);
         hit = findViewById(R.id.hit);
+        distance = findViewById(R.id.distance);
 
         Bundle intent = getIntent().getExtras();
         hpt_id = intent.getInt("hpt_id");
         hpt_name = intent.getString("hpt_name");
         hpt_phone = intent.getString("hpt_phone");
         address = intent.getString("address");
+        distanceVal = intent.getString("distance");
+
+        distance.setText("나와의 거리: "+distanceVal);
 
         fetchDetail(hpt_id);  // 레트로핏으로 정보 불러오기
         hitUp(hpt_id);  // 조회수 ++
